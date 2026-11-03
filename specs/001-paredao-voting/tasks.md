@@ -371,15 +371,15 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
 
 **Purpose**: validar os critérios de sucesso sob carga real e registrar os resultados.
 
-- [ ] PLN-14-001 Executar as seções 1–3 do [quickstart.md](quickstart.md).
+- [X] PLN-14-001 Executar as seções 1–3 do [quickstart.md](quickstart.md).
   - `dotnet build Voting.slnx -c Release` com `0 Warning(s)`.
   - `dotnet test Voting.slnx -c Release` todo verde, sem `Skip`.
   - Cenário manual de 10 passos.
   - Divergências viram correções na etapa de origem, começando por um teste que reproduz o problema.
-- [ ] PLN-14-002 Executar a seção 4 do [quickstart.md](quickstart.md) (10.000 votos/s, `--duration 35`) e registrar em `specs/001-paredao-voting/validation.md`: `achievedRate`, contadores, `latencyMs`, `checks` e o tempo entre `closesAt` e `finalizedAt`.
+- [X] PLN-14-002 Executar a seção 4 do [quickstart.md](quickstart.md) (10.000 votos/s, `--duration 35`) e registrar em `specs/001-paredao-voting/validation.md`: `achievedRate`, contadores, `latencyMs`, `checks` e o tempo entre `closesAt` e `finalizedAt`.
   - Validar SC-001, SC-002, SC-003, SC-004, SC-005, SC-006 e SC-008.
   - Se a meta não for atingida, ajustar apenas `VoteWriter` (`MaxBatchSize`, `MaxBatchDelay`, `Capacity`) e o pool do Npgsql em `src/Voting.Api/appsettings.json`, sem relaxar a durabilidade.
-- [ ] PLN-14-003 Executar a seção 6 do [quickstart.md](quickstart.md) (queda da API no meio da votação) e registrar em `specs/001-paredao-voting/validation.md` que `closesAt` ficou inalterado e que `acceptedEqualsTotalVotes = true` (FR-020).
+- [X] PLN-14-003 Executar a seção 6 do [quickstart.md](quickstart.md) (queda da API no meio da votação) e registrar em `specs/001-paredao-voting/validation.md` que `closesAt` ficou inalterado e que `acceptedEqualsTotalVotes = true` (FR-020).
 
 ---
 

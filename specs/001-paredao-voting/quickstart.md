@@ -14,7 +14,7 @@ Guia de validação ponta a ponta. Não contém implementação; os passos devem
 
 ```bash
 dotnet build Voting.slnx -c Release   # deve terminar com 0 Warning(s), 0 Error(s)
-dotnet test  Voting.slnx -c Release   # unitários + integração (Testcontainers sobe o PostgreSQL sozinho)
+dotnet test --solution Voting.slnx -c Release   # unitários + integração (Testcontainers sobe o PostgreSQL sozinho)
 ```
 
 **Esperado**: build com zero warnings (Princípio IV) e todos os testes verdes, sem `Skip`.
