@@ -37,7 +37,7 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
 
 **Purpose**: solução, projetos, build sem warnings e infraestrutura de teste.
 
-- [ ] PLN-01-001 Criar `Voting.slnx` na raiz.
+- [X] PLN-01-001 Criar `Voting.slnx` na raiz.
   - Projetos de produção, todos `net10.0`:
     - `src/Voting.Domain/Voting.Domain.csproj` (classlib);
     - `src/Voting.Application/Voting.Application.csproj` (classlib);
@@ -47,16 +47,16 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
   - Projetos de teste xUnit v3: `tests/Voting.Domain.Tests`, `tests/Voting.Application.Tests`, `tests/Voting.Infrastructure.Tests`, `tests/Voting.Api.Tests` e `tests/Voting.Workload.Tests`.
   - Referências de produção: Application→Domain; Infrastructure→Application; Api→Application e Infrastructure. `Voting.Workload` não referencia nada de `src/`.
   - Cada projeto de teste referencia o projeto que testa. `Voting.Workload.Tests` referencia também `Voting.Api` e `tests/Voting.Api.Tests`, para o teste de integração.
-- [ ] PLN-01-002 [P] Criar `Directory.Packages.props` com `ManagePackageVersionsCentrally=true`. Versões estáveis atuais de `Npgsql`, `xunit.v3`, `xunit.runner.visualstudio`, `Microsoft.NET.Test.Sdk`, `Microsoft.AspNetCore.Mvc.Testing`, `Testcontainers.PostgreSql` e `Microsoft.Extensions.TimeProvider.Testing`. Os `.csproj` não declaram versões.
-- [ ] PLN-01-003 [P] Adicionar `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` ao `Directory.Build.props`, mantendo as propriedades existentes.
-- [ ] PLN-01-004 [P] Criar `docker-compose.yml` com o serviço `postgres` (`postgres:17`).
+- [X] PLN-01-002 [P] Criar `Directory.Packages.props` com `ManagePackageVersionsCentrally=true`. Versões estáveis atuais de `Npgsql`, `xunit.v3`, `xunit.runner.visualstudio`, `Microsoft.NET.Test.Sdk`, `Microsoft.AspNetCore.Mvc.Testing`, `Testcontainers.PostgreSql` e `Microsoft.Extensions.TimeProvider.Testing`. Os `.csproj` não declaram versões.
+- [X] PLN-01-003 [P] Adicionar `<TreatWarningsAsErrors>true</TreatWarningsAsErrors>` ao `Directory.Build.props`, mantendo as propriedades existentes.
+- [X] PLN-01-004 [P] Criar `docker-compose.yml` com o serviço `postgres` (`postgres:17`).
   - Porta `5432`, banco `voting`, usuário `voting`.
   - Senha lida de `POSTGRES_PASSWORD`, com default de desenvolvimento documentado no próprio arquivo.
   - Healthcheck `pg_isready`.
-- [ ] PLN-01-005 [P] Criar `tests/Voting.Infrastructure.Tests/Fixtures/PostgresFixture.cs` e `PostgresCollection.cs`.
+- [X] PLN-01-005 [P] Criar `tests/Voting.Infrastructure.Tests/Fixtures/PostgresFixture.cs` e `PostgresCollection.cs`.
   - A fixture é um `IAsyncLifetime` que sobe `PostgreSqlContainer` (`postgres:17`) uma vez por coleção e expõe a connection string.
   - A coleção é a definição xUnit compartilhada.
-- [ ] PLN-01-006 Rodar `dotnet build Voting.slnx` e confirmar `0 Warning(s)` com os projetos vazios.
+- [X] PLN-01-006 Rodar `dotnet build Voting.slnx` e confirmar `0 Warning(s)` com os projetos vazios.
 
 **Checkpoint**: a solução compila sem warnings e a fixture de PostgreSQL sobe nos testes.
 

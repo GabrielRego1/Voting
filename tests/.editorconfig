@@ -1,0 +1,11 @@
+# Test-only analyzer relaxations (constitution principle IV: every suppression is justified).
+[*.cs]
+
+# CA1707: test names follow Method_Scenario_ExpectedResult (constitution principle II).
+dotnet_diagnostic.CA1707.severity = none
+
+# CA1711: xUnit collection definitions are conventionally suffixed with "Collection".
+dotnet_diagnostic.CA1711.severity = none
+
+# CA1515: xUnit requires public test classes and fixtures.
+dotnet_diagnostic.CA1515.severity = none
