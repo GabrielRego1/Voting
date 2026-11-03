@@ -88,6 +88,18 @@ public sealed class PollTests
     }
 
     [Fact]
+    public void Open_InstantWithSubMicrosecondTicks_TruncatesToStoragePrecision()
+    {
+        var poll = Poll.Create(["Ana", "Bruno", "Carla"], Now.AddTicks(15)).Value;
+
+        poll.Open(Now.AddTicks(27));
+
+        Assert.Equal(Now.AddTicks(10), poll.CreatedAt);
+        Assert.Equal(Now.AddTicks(20), poll.OpenedAt);
+        Assert.Equal(Now.AddTicks(20).AddSeconds(30), poll.ClosesAt);
+    }
+
+    [Fact]
     public void StatusAt_NotOpened_ReturnsCreated()
     {
         var poll = CreatePoll();

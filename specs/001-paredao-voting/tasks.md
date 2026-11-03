@@ -102,19 +102,19 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
 
 ### PLN-04 — Infrastructure: schema e repositório de paredões
 
-- [ ] PLN-04-001 Escrever testes de integração que falham em `tests/Voting.Infrastructure.Tests/Persistence/PollRepositoryTests.cs`, usando `PostgresCollection`.
+- [X] PLN-04-001 Escrever testes de integração que falham em `tests/Voting.Infrastructure.Tests/Persistence/PollRepositoryTests.cs`, usando `PostgresCollection`.
   - Round-trip de paredão com 3 participantes.
   - `opened_at` e `closes_at` persistidos.
   - **Reinício simulado**: uma nova instância de `PollRepository` com um novo `NpgsqlDataSource` lê o mesmo `closes_at`, que nunca é alterado (FR-020).
   - `TryOpenAsync` concorrente em dois paredões: só um vence (índice parcial `one_open_poll`).
   - `ListDueForFinalizationAsync` retorna apenas paredões com `closes_at < now` e `finalized = false`.
-- [ ] PLN-04-002 Criar o schema e o inicializador.
+- [X] PLN-04-002 Criar o schema e o inicializador.
   - `src/Voting.Infrastructure/Persistence/Sql/001_schema.sql`, como embedded resource, com `polls`, `participants`, `votes` e `poll_results` exatamente como em [data-model.md](data-model.md#persistência-postgresql).
   - Incluir `UNIQUE (poll_id, idempotency_key)`, `UNIQUE (poll_id, position)`, `UNIQUE (poll_id, lower(name))`, `INDEX (poll_id, participant_id)` e o índice parcial `one_open_poll`.
   - Tudo idempotente com `CREATE ... IF NOT EXISTS`. O `SchemaInitializer` aplica, em ordem, todos os scripts `Sql/NNN_*.sql` embarcados.
   - O trigger de imutabilidade **não** entra aqui: ele é criado em PLN-07-006, depois do teste que o exige.
   - `src/Voting.Infrastructure/Persistence/SchemaInitializer.cs` (`IHostedService`) aplica o script na inicialização.
-- [ ] PLN-04-003 Implementar `src/Voting.Infrastructure/Persistence/PollRepository.cs` com Npgsql e SQL explícito.
+- [X] PLN-04-003 Implementar `src/Voting.Infrastructure/Persistence/PollRepository.cs` com Npgsql e SQL explícito.
   - `src/Voting.Infrastructure/DependencyInjection.cs` registra o `NpgsqlDataSource` (connection string `ConnectionStrings:Voting`), o `SchemaInitializer` e o `PollRepository`.
 
 ### PLN-05 — API: paredões e mapeamento de erros

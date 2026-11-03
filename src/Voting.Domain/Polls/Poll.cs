@@ -43,6 +43,7 @@ public sealed class Poll
 
     public static Result<Poll> Create(IReadOnlyList<string>? names, DateTimeOffset createdAt)
     {
+        createdAt = Instants.Normalize(createdAt);
         if (names is null || names.Count != ParticipantCount)
         {
             return Result.Failure<Poll>(PollErrors.InvalidParticipants);
@@ -81,8 +82,8 @@ public sealed class Poll
             return Result.Failure(PollErrors.PollAlreadyOpened);
         }
 
-        OpenedAt = now;
-        ClosesAt = now + Duration;
+        OpenedAt = Instants.Normalize(now);
+        ClosesAt = OpenedAt + Duration;
         return Result.Success();
     }
 
