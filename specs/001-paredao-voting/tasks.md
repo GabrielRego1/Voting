@@ -88,17 +88,17 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
 
 ### PLN-03 — Application: casos de uso do paredão
 
-- [ ] PLN-03-001 Escrever testes que falham, com `FakeTimeProvider` e o fake `tests/Voting.Application.Tests/Fakes/InMemoryPollRepository.cs`.
+- [X] PLN-03-001 Escrever testes que falham, com `FakeTimeProvider` e o fake `tests/Voting.Application.Tests/Fakes/InMemoryPollRepository.cs`.
   - Arquivos de teste: `tests/Voting.Application.Tests/Polls/CreatePollTests.cs`, `tests/Voting.Application.Tests/Polls/OpenPollTests.cs` e `tests/Voting.Application.Tests/Polls/GetPollTests.cs`.
   - `CreatePoll` persiste e retorna o paredão `Created`.
   - `OpenPoll` usa `TimeProvider.GetUtcNow()` e falha com `another_poll_open` se houver paredão aberto ou ainda não finalizado.
   - `OpenPoll` e `GetPoll` falham com `poll_not_found` para id inexistente.
   - `GetPoll` retorna o status derivado do relógio.
-- [ ] PLN-03-002 Declarar `IPollRepository` em `src/Voting.Application/Abstractions/IPollRepository.cs`.
+- [X] PLN-03-002 Declarar `IPollRepository` em `src/Voting.Application/Abstractions/IPollRepository.cs`.
   - `AddAsync`, `GetAsync(Guid)`.
   - `TryOpenAsync(Poll)`, que retorna `false` quando outro paredão está aberto ou não finalizado.
   - `ListDueForFinalizationAsync(DateTimeOffset now)`.
-- [ ] PLN-03-003 Implementar `src/Voting.Application/Polls/CreatePoll.cs`, `src/Voting.Application/Polls/OpenPoll.cs`, `src/Voting.Application/Polls/GetPoll.cs` e `src/Voting.Application/Polls/PollDto.cs`, com registro em `src/Voting.Application/DependencyInjection.cs`.
+- [X] PLN-03-003 Implementar `src/Voting.Application/Polls/CreatePoll.cs`, `src/Voting.Application/Polls/OpenPoll.cs`, `src/Voting.Application/Polls/GetPoll.cs` e `src/Voting.Application/Polls/PollDto.cs`, com registro em `src/Voting.Application/DependencyInjection.cs`.
 
 ### PLN-04 — Infrastructure: schema e repositório de paredões
 

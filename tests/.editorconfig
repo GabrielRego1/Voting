@@ -9,3 +9,6 @@ dotnet_diagnostic.CA1711.severity = none
 
 # CA1515: xUnit requires public test classes and fixtures.
 dotnet_diagnostic.CA1515.severity = none
+
+# Async test methods follow Method_Scenario_ExpectedResult; an "Async" suffix would break that convention.
+dotnet_naming_rule.async_methods_should_end_with_async.severity = none
