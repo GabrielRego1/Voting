@@ -119,19 +119,19 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
 
 ### PLN-05 — API: paredões e mapeamento de erros
 
-- [ ] PLN-05-001 Criar `tests/Voting.Api.Tests/Fixtures/VotingApiFactory.cs`.
+- [X] PLN-05-001 Criar `tests/Voting.Api.Tests/Fixtures/VotingApiFactory.cs`.
   - É um `WebApplicationFactory<Program>` + `IAsyncLifetime`.
   - Sobe um `PostgreSqlContainer` e sobrescreve `ConnectionStrings:Voting`.
   - Substitui `TimeProvider` por um `FakeTimeProvider` exposto pela factory. Ele substitui apenas o relógio de negócio; testes que avançam o relógio aguardam por polling do endpoint, e não por espera de tempo real.
   - Expõe uma `ApiCollection` xUnit.
-- [ ] PLN-05-002 Escrever testes de integração que falham em `tests/Voting.Api.Tests/Polls/PollEndpointsTests.cs`, conforme [voting-api.openapi.yaml](contracts/voting-api.openapi.yaml).
+- [X] PLN-05-002 Escrever testes de integração que falham em `tests/Voting.Api.Tests/Polls/PollEndpointsTests.cs`, conforme [voting-api.openapi.yaml](contracts/voting-api.openapi.yaml).
   - `POST /polls` → `201` com `Location`, `status: Created` e 3 participantes com `position` 1–3.
   - `POST /polls` → `400 invalid_participants` para 2 nomes, para nome com 101 caracteres e para nomes duplicados.
   - `GET /polls/{id}` → `200`, ou `404 poll_not_found`.
   - `POST /polls/{id}/open` → `200` com `closesAt = openedAt + 30 s`.
   - `POST /polls/{id}/open` → `409 poll_already_opened` na segunda chamada e `409 another_poll_open` com outro paredão aberto.
   - Todos os erros vêm como `application/problem+json` com o campo `code`.
-- [ ] PLN-05-003 Implementar a API de paredões.
+- [X] PLN-05-003 Implementar a API de paredões.
   - `src/Voting.Api/Program.cs` com `public partial class Program`, `TimeProvider.System`, ProblemDetails e porta `5080` em `src/Voting.Api/Properties/launchSettings.json` e `appsettings.json`.
   - `src/Voting.Api/Errors/ErrorMapping.cs` mapeia cada `code` do contrato para seu status HTTP:
     - `invalid_participants`, `missing_idempotency_key` e `invalid_idempotency_key` → 400;

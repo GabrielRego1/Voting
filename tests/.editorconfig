@@ -12,3 +12,6 @@ dotnet_diagnostic.CA1515.severity = none
 
 # Async test methods follow Method_Scenario_ExpectedResult; an "Async" suffix would break that convention.
 dotnet_naming_rule.async_methods_should_end_with_async.severity = none
+
+# CA1861: inline arrays keep test inputs readable; tests are not a hot path.
+dotnet_diagnostic.CA1861.severity = none
