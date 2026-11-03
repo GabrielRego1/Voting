@@ -328,14 +328,14 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
 
 ### PLN-13 — Gerador de carga
 
-- [ ] PLN-13-001 [P] [US4] Escrever testes que falham em `tests/Voting.Workload.Tests/WorkloadOptionsTests.cs`, cobrindo todas as opções de [workload-cli.md](contracts/workload-cli.md).
+- [X] PLN-13-001 [P] [US4] Escrever testes que falham em `tests/Voting.Workload.Tests/WorkloadOptionsTests.cs`, cobrindo todas as opções de [workload-cli.md](contracts/workload-cli.md).
   - Os defaults da tabela são aplicados.
   - `--distribution` deve ter 3 valores somando 100.
   - `--retry-fraction` deve estar em `0..1`.
   - `--rate`, `--duration` e `--connections` devem ser > 0.
   - `--output` aceita apenas `text` ou `json`.
   - Erro de uso → código de saída `2`.
-- [ ] PLN-13-002 [P] [US4] Escrever testes que falham.
+- [X] PLN-13-002 [P] [US4] Escrever testes que falham.
   - `tests/Voting.Workload.Tests/ParticipantPickerTests.cs`: com `Random` semeado e 100.000 sorteios, 50/30/20 fica a ±1 ponto percentual.
   - `tests/Voting.Workload.Tests/LatencyRecorderTests.cs`: p50/p95/p99/max corretos para amostras conhecidas.
   - `tests/Voting.Workload.Tests/ReportBuilderTests.cs`:
@@ -343,19 +343,19 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
     - reenvios intencionais vão para `replayed`;
     - rejeições são agrupadas por `code`;
     - `checks` e código de saída `0`/`1` seguem o contrato.
-- [ ] PLN-13-003 [P] [US4] Escrever teste de integração que falha em `tests/Voting.Workload.Tests/WorkloadIntegrationTests.cs`, usando `VotingApiFactory` (via handler HTTP da factory).
+- [X] PLN-13-003 [P] [US4] Escrever teste de integração que falha em `tests/Voting.Workload.Tests/WorkloadIntegrationTests.cs`, usando `VotingApiFactory` (via handler HTTP da factory).
   - Cria e abre o paredão, roda a ~100 votos/s por 3 s com `--retry-fraction 0.1` e avança o `FakeTimeProvider` além de `closesAt`.
   - O relatório tem `acceptedEqualsTotalVotes = true` e `noDuplicatesFromReplays = true`.
-- [ ] PLN-13-004 [US4] Implementar `tools/Voting.Workload/WorkloadOptions.cs` e `tools/Voting.Workload/OptionsParser.cs`, um parser manual das opções do contrato, sem dependência extra.
-- [ ] PLN-13-005 [US4] Implementar as peças de medição e relatório.
+- [X] PLN-13-004 [US4] Implementar `tools/Voting.Workload/WorkloadOptions.cs` e `tools/Voting.Workload/OptionsParser.cs`, um parser manual das opções do contrato, sem dependência extra.
+- [X] PLN-13-005 [US4] Implementar as peças de medição e relatório.
   - `tools/Voting.Workload/ParticipantPicker.cs`.
   - `tools/Voting.Workload/LatencyRecorder.cs`.
   - `tools/Voting.Workload/Report.cs`, `tools/Voting.Workload/ReportBuilder.cs` e `tools/Voting.Workload/ReportWriter.cs`. Os formatos `text` e `json` usam os campos do contrato.
-- [ ] PLN-13-006 [US4] Implementar `tools/Voting.Workload/VotingApiClient.cs`.
+- [X] PLN-13-006 [US4] Implementar `tools/Voting.Workload/VotingApiClient.cs`.
   - Cliente HTTP do contrato; aceita `HttpMessageHandler` injetável para o teste de integração.
   - `SocketsHttpHandler` com `MaxConnectionsPerServer = --connections`.
   - Retentativa automática com a mesma chave em `503` ou erro de transporte, até 3 tentativas, contada em `retried`.
-- [ ] PLN-13-007 [US4] Implementar o executor e o ponto de entrada.
+- [X] PLN-13-007 [US4] Implementar o executor e o ponto de entrada.
   - `tools/Voting.Workload/LoadRunner.cs`: modelo aberto com ticks de 10 ms enviando `rate/100` votos por tick, independente das respostas. Gera chaves únicas, reenvia a fração `--retry-fraction` de votos aceitos com a mesma chave e registra a latência de cada requisição.
   - `tools/Voting.Workload/Program.cs`:
     - cria e abre o paredão quando `--poll-id` é omitido;
