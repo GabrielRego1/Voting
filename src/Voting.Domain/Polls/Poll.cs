@@ -92,4 +92,21 @@ public sealed class Poll
         _ = now;
         return OpenedAt is null ? PollStatus.Created : PollStatus.Open;
     }
+
+    /// <summary>
+    /// Decides whether a vote for <paramref name="participantId"/> received at <paramref name="receivedAt"/> is accepted.
+    /// </summary>
+    public VoteEvaluation EvaluateVote(Guid participantId, DateTimeOffset receivedAt)
+    {
+        _ = receivedAt;
+        for (var i = 0; i < Participants.Count; i++)
+        {
+            if (Participants[i].Id == participantId)
+            {
+                return VoteEvaluation.Accepted;
+            }
+        }
+
+        return VoteEvaluation.Rejected(VoteRejection.InvalidParticipant);
+    }
 }

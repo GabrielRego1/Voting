@@ -153,11 +153,11 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
 
 ### PLN-06 — Avaliação e registro de voto
 
-- [ ] PLN-06-001 [P] [US1] Escrever testes que falham em `tests/Voting.Domain.Tests/Polls/PollVoteEvaluationTests.cs`.
+- [X] PLN-06-001 [P] [US1] Escrever testes que falham em `tests/Voting.Domain.Tests/Polls/PollVoteEvaluationTests.cs`.
   - `EvaluateVote(participantId, receivedAt)` retorna aceito para participante do paredão com `receivedAt` entre `OpenedAt` e `ClosesAt`.
   - Retorna `invalid_participant` para `participantId` desconhecido.
   - Cinco avaliações seguidas do mesmo participante são todas aceitas (sem restrição de voto único).
-- [ ] PLN-06-002 [P] [US1] Escrever testes que falham em `tests/Voting.Application.Tests/Votes/CastVoteTests.cs`, com o fake `tests/Voting.Application.Tests/Fakes/FakeVoteWriter.cs`.
+- [X] PLN-06-002 [P] [US1] Escrever testes que falham em `tests/Voting.Application.Tests/Votes/CastVoteTests.cs`, com o fake `tests/Voting.Application.Tests/Fakes/FakeVoteWriter.cs`.
   - `receivedAt` vem de `TimeProvider` e é carimbado antes de chamar o writer.
   - Chave ausente → `missing_idempotency_key`.
   - Chave fora de "1–64 caracteres `[A-Za-z0-9-_]`" → `invalid_idempotency_key` (testar 65 caracteres e `"a b"`).
@@ -165,13 +165,13 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
   - Participante inválido → `invalid_participant`, sem chamar o writer.
   - Os resultados do writer são propagados como `Accepted`, `Replayed`, `Conflict` (`idempotency_key_conflict`) e `Overloaded` (`overloaded`).
   - 100 votos da mesma "origem" são todos aceitos, sem limite por origem (FR-018).
-- [ ] PLN-06-003 [US1] Implementar `EvaluateVote` em `src/Voting.Domain/Polls/Poll.cs`, com `src/Voting.Domain/Polls/VoteEvaluation.cs` e `src/Voting.Domain/Polls/VoteRejection.cs`, cobrindo o aceite e `invalid_participant`.
+- [X] PLN-06-003 [US1] Implementar `EvaluateVote` em `src/Voting.Domain/Polls/Poll.cs`, com `src/Voting.Domain/Polls/VoteEvaluation.cs` e `src/Voting.Domain/Polls/VoteRejection.cs`, cobrindo o aceite e `invalid_participant`.
   - Criar o registro imutável `src/Voting.Domain/Votes/Vote.cs`: `Id` (Guid v7), `PollId`, `ParticipantId`, `IdempotencyKey`, `ReceivedAt`.
-- [ ] PLN-06-004 [US1] Declarar as abstrações do voto.
+- [X] PLN-06-004 [US1] Declarar as abstrações do voto.
   - `IVoteWriter` em `src/Voting.Application/Abstractions/IVoteWriter.cs`: `WriteAsync(Vote, CancellationToken)` retorna `VoteWriteOutcome`.
   - `src/Voting.Application/Votes/VoteWriteOutcome.cs`: `Accepted(VoteReceipt)`, `Replayed(VoteReceipt)`, `Conflict` ou `Overloaded`.
   - `src/Voting.Application/Votes/VoteReceipt.cs`.
-- [ ] PLN-06-005 [US1] Implementar `src/Voting.Application/Votes/CastVote.cs` e registrá-lo em `src/Voting.Application/DependencyInjection.cs`.
+- [X] PLN-06-005 [US1] Implementar `src/Voting.Application/Votes/CastVote.cs` e registrá-lo em `src/Voting.Application/DependencyInjection.cs`.
 
 ### PLN-07 — Gravação durável em lote
 
