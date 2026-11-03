@@ -16,6 +16,17 @@ public sealed class FakeVoteWriter : IVoteWriter
 
     public IReadOnlyCollection<Vote> Writes => _writes;
 
+    public List<string>? Events { get; set; }
+
+    public List<DateTimeOffset> Flushes { get; } = [];
+
+    public Task FlushUntilAsync(DateTimeOffset instant, CancellationToken cancellationToken = default)
+    {
+        Flushes.Add(instant);
+        Events?.Add("flush");
+        return Task.CompletedTask;
+    }
+
     public Task<VoteWriteOutcome> WriteAsync(Vote vote, CancellationToken cancellationToken = default)
     {
         _writes.Enqueue(vote);

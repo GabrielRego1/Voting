@@ -276,30 +276,30 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
 
 ### PLN-11 — Finalização do paredão e recuperação
 
-- [ ] PLN-11-001 [P] [US3] Escrever testes que falham, com fakes em `tests/Voting.Application.Tests/Fakes/`.
+- [X] PLN-11-001 [P] [US3] Escrever testes que falham, com fakes em `tests/Voting.Application.Tests/Fakes/`.
   - Arquivos de teste: `tests/Voting.Application.Tests/Results/FinalizePollTests.cs` e `tests/Voting.Application.Tests/Results/GetResultTests.cs`.
   - `FinalizePoll` chama `FlushUntilAsync(closesAt)` antes de contar.
   - `FinalizePoll` grava `FinalizedAt` a partir do `TimeProvider`.
   - Uma segunda chamada não altera o resultado já gravado.
   - `FinalizePoll` não faz nada se `now <= closesAt`.
   - `GetResult` retorna `result_not_available` para os estados `Created`, `Open` e `Closed` sem resultado; retorna `poll_not_found` para paredão inexistente; retorna o resultado quando ele existe.
-- [ ] PLN-11-002 [P] [US3] Acrescentar teste de integração em `tests/Voting.Infrastructure.Tests/Votes/VoteBatchWriterTests.cs`.
+- [X] PLN-11-002 [P] [US3] Acrescentar teste de integração em `tests/Voting.Infrastructure.Tests/Votes/VoteBatchWriterTests.cs`.
   - Com votos enfileirados com `receivedAt <= closesAt`, `FlushUntilAsync(closesAt)` só retorna depois que todos estão commitados em `votes`.
-- [ ] PLN-11-003 [P] [US3] Escrever testes de integração que falham.
+- [X] PLN-11-003 [P] [US3] Escrever testes de integração que falham.
   - `tests/Voting.Infrastructure.Tests/Persistence/VoteTallyTests.cs`: `GROUP BY` correto, incluindo participantes com 0 votos.
   - `tests/Voting.Infrastructure.Tests/Persistence/ResultRepositoryTests.cs`: insere uma única vez e marca `polls.finalized = true` na mesma transação; um segundo `TryAddAsync` não altera nada.
   - `tests/Voting.Infrastructure.Tests/Hosting/PollFinalizerTests.cs`, com `FakeTimeProvider`:
     - finaliza o paredão depois de `closes_at`;
     - ao iniciar, finaliza paredões já vencidos sem resultado (recuperação, FR-020);
     - `FinalizedAt - ClosesAt <= 5 s` (SC-005).
-- [ ] PLN-11-004 [US3] Declarar as portas.
+- [X] PLN-11-004 [US3] Declarar as portas.
   - `src/Voting.Application/Abstractions/IVoteTally.cs`: `CountByParticipantAsync(pollId)`.
   - `src/Voting.Application/Abstractions/IResultRepository.cs`: `TryAddAsync(PollResult)` idempotente e `GetAsync(pollId)`.
   - Acrescentar `FlushUntilAsync(DateTimeOffset, CancellationToken)` a `src/Voting.Application/Abstractions/IVoteWriter.cs`.
-- [ ] PLN-11-005 [US3] Implementar `src/Voting.Application/Results/FinalizePoll.cs`, `src/Voting.Application/Results/GetResult.cs` e `src/Voting.Application/Results/PollResultDto.cs`, e registrá-los no DI da Application.
-- [ ] PLN-11-006 [US3] Implementar `FlushUntilAsync` em `src/Voting.Infrastructure/Votes/VoteBatchWriter.cs`.
+- [X] PLN-11-005 [US3] Implementar `src/Voting.Application/Results/FinalizePoll.cs`, `src/Voting.Application/Results/GetResult.cs` e `src/Voting.Application/Results/PollResultDto.cs`, e registrá-los no DI da Application.
+- [X] PLN-11-006 [US3] Implementar `FlushUntilAsync` em `src/Voting.Infrastructure/Votes/VoteBatchWriter.cs`.
   - Usar um marcador na fila, completado quando todos os votos enfileirados antes dele forem commitados.
-- [ ] PLN-11-007 [US3] Implementar a finalização na Infrastructure.
+- [X] PLN-11-007 [US3] Implementar a finalização na Infrastructure.
   - `src/Voting.Infrastructure/Persistence/VoteTally.cs`.
   - `src/Voting.Infrastructure/Persistence/ResultRepository.cs`, com `tallies` em JSONB e `outcome`.
   - `src/Voting.Infrastructure/Hosting/PollFinalizer.cs`: `BackgroundService` em laço de 250 ms via `TimeProvider` (relógio de negócio), chamando `ListDueForFinalizationAsync` e `FinalizePoll`. Também roda na inicialização.

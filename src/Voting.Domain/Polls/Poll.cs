@@ -89,6 +89,11 @@ public sealed class Poll
 
     public PollStatus StatusAt(DateTimeOffset now)
     {
+        if (IsFinalized)
+        {
+            return PollStatus.Finalized;
+        }
+
         if (OpenedAt is null)
         {
             return PollStatus.Created;

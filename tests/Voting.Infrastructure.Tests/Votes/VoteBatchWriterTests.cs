@@ -177,6 +177,24 @@ public sealed class VoteBatchWriterTests(PostgresFixture postgres)
         }
     }
 
+    [Fact]
+    public async Task FlushUntilAsync_QueuedVotes_ReturnsOnlyAfterAllAreCommitted()
+    {
+        await using var dataSource = await postgres.CreateDatabaseAsync(Ct);
+        var poll = await PollSeeder.SeedOpenPollAsync(dataSource, Ct);
+        await using var writer = await StartWriterAsync(
+            dataSource,
+            new VoteWriterOptions { MaxBatchSize = 10, MaxBatchDelay = TimeSpan.FromMilliseconds(300) });
+        var writes = Enumerable.Range(0, 55)
+            .Select(i => writer.WriteAsync(NewVote(poll, i % 3, $"flush-{i}", seconds: 29), Ct))
+            .ToArray();
+
+        await writer.FlushUntilAsync(poll.ClosesAt!.Value, Ct);
+
+        Assert.Equal(55, await PollSeeder.CountVotesAsync(dataSource, poll.Id, Ct));
+        Assert.All(writes, w => Assert.True(w.IsCompletedSuccessfully));
+    }
+
     internal static Vote NewVote(Poll poll, int participantIndex, string key, int seconds = 1)
     {
         return Vote.Create(poll.Id, poll.Participants[participantIndex].Id, key, PollSeeder.OpenedAt.AddSeconds(seconds));
@@ -199,6 +217,11 @@ public sealed class VoteBatchWriterTests(PostgresFixture postgres)
         public Task<VoteWriteOutcome> WriteAsync(Vote vote, CancellationToken cancellationToken)
         {
             return writer.WriteAsync(vote, cancellationToken);
+        }
+
+        public Task FlushUntilAsync(DateTimeOffset instant, CancellationToken cancellationToken)
+        {
+            return writer.FlushUntilAsync(instant, cancellationToken);
         }
 
         public async ValueTask DisposeAsync()

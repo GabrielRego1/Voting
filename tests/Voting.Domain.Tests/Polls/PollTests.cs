@@ -119,6 +119,16 @@ public sealed class PollTests
     }
 
     [Fact]
+    public void StatusAt_FinalizedPoll_ReturnsFinalized()
+    {
+        var poll = CreatePoll();
+        poll.Open(Now);
+        var finalized = Poll.Rehydrate(poll.Id, poll.CreatedAt, poll.OpenedAt, poll.ClosesAt, isFinalized: true, poll.Participants);
+
+        Assert.Equal(PollStatus.Finalized, finalized.StatusAt(Now.AddMinutes(1)));
+    }
+
+    [Fact]
     public void Rehydrate_PersistedState_RebuildsSamePoll()
     {
         var original = CreatePoll();

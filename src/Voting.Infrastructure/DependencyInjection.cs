@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Voting.Application.Abstractions;
+using Voting.Infrastructure.Hosting;
 using Voting.Infrastructure.Persistence;
 using Voting.Infrastructure.Votes;
 
@@ -31,6 +32,12 @@ public static class DependencyInjection
         services.AddSingleton<VoteBatchWriter>();
         services.AddSingleton<IVoteWriter>(sp => sp.GetRequiredService<VoteBatchWriter>());
         services.AddHostedService(sp => sp.GetRequiredService<VoteBatchWriter>());
+
+        services.AddSingleton<IVoteTally, VoteTally>();
+        services.AddSingleton<IResultRepository, ResultRepository>();
+
+        // Registered after the writer: hosted services start in order, and finalization flushes the writer.
+        services.AddHostedService<PollFinalizer>();
         return services;
     }
 }

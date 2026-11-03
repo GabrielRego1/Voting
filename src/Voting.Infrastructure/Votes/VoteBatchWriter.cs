@@ -36,7 +36,7 @@ public sealed partial class VoteBatchWriter(
 
     private readonly VoteWriterOptions _options = options.Value;
 
-    private readonly Channel<PendingVote> _channel = Channel.CreateBounded<PendingVote>(
+    private readonly Channel<QueueItem> _channel = Channel.CreateBounded<QueueItem>(
         new BoundedChannelOptions(options.Value.Capacity)
         {
             SingleReader = true,
@@ -56,6 +56,19 @@ public sealed partial class VoteBatchWriter(
         return pending.Completion.Task.WaitAsync(cancellationToken);
     }
 
+    /// <summary>
+    /// Enqueues a marker that completes once every vote queued before it has been committed. Votes are
+    /// stamped before being queued, so every vote received up to <paramref name="instant"/> is already ahead
+    /// of the marker when this is called after <paramref name="instant"/>.
+    /// </summary>
+    public async Task FlushUntilAsync(DateTimeOffset instant, CancellationToken cancellationToken = default)
+    {
+        _ = instant;
+        var marker = new FlushMarker();
+        await _channel.Writer.WriteAsync(marker, cancellationToken);
+        await marker.Completion.Task.WaitAsync(cancellationToken);
+    }
+
     public override async Task StopAsync(CancellationToken cancellationToken)
     {
         // Stop accepting votes and let ExecuteAsync drain what is already queued.
@@ -67,20 +80,26 @@ public sealed partial class VoteBatchWriter(
     {
         var reader = _channel.Reader;
         var batch = new List<PendingVote>(_options.MaxBatchSize);
+        var markers = new List<FlushMarker>();
 
         // Not tied to stoppingToken: the loop ends when StopAsync completes the channel and the queue is drained.
         while (await reader.WaitToReadAsync(CancellationToken.None))
         {
-            await CollectBatchAsync(reader, batch);
+            await CollectBatchAsync(reader, batch, markers);
             await WriteBatchAsync(batch);
+            foreach (var marker in markers)
+            {
+                marker.Completion.TrySetResult();
+            }
+
             batch.Clear();
+            markers.Clear();
         }
     }
 
-    private async Task CollectBatchAsync(ChannelReader<PendingVote> reader, List<PendingVote> batch)
+    private async Task CollectBatchAsync(ChannelReader<QueueItem> reader, List<PendingVote> batch, List<FlushMarker> markers)
     {
-        Drain(reader, batch);
-        if (batch.Count >= _options.MaxBatchSize || batch.Count == 0)
+        if (!Drain(reader, batch, markers) || batch.Count == 0)
         {
             return;
         }
@@ -89,16 +108,28 @@ public sealed partial class VoteBatchWriter(
         if (remaining > TimeSpan.Zero)
         {
             await Task.Delay(remaining, TimeProvider.System);
-            Drain(reader, batch);
+            Drain(reader, batch, markers);
         }
     }
 
-    private void Drain(ChannelReader<PendingVote> reader, List<PendingVote> batch)
+    /// <summary>
+    /// Moves queued votes into <paramref name="batch"/>. Returns <see langword="false"/> when the batch must be
+    /// written right away: it is full, or a flush marker was reached (votes behind a marker wait for the next batch).
+    /// </summary>
+    private bool Drain(ChannelReader<QueueItem> reader, List<PendingVote> batch, List<FlushMarker> markers)
     {
-        while (batch.Count < _options.MaxBatchSize && reader.TryRead(out var pending))
+        while (batch.Count < _options.MaxBatchSize && reader.TryRead(out var item))
         {
-            batch.Add(pending);
+            if (item is FlushMarker marker)
+            {
+                markers.Add(marker);
+                return false;
+            }
+
+            batch.Add((PendingVote)item);
         }
+
+        return batch.Count < _options.MaxBatchSize;
     }
 
     private async Task WriteBatchAsync(List<PendingVote> batch)
@@ -219,7 +250,14 @@ public sealed partial class VoteBatchWriter(
     [LoggerMessage(Level = LogLevel.Error, Message = "Failed to commit a batch of {Count} votes; none was confirmed.")]
     private static partial void LogBatchFailed(ILogger logger, Exception exception, int count);
 
-    private sealed class PendingVote(Vote vote)
+    private abstract class QueueItem;
+
+    private sealed class FlushMarker : QueueItem
+    {
+        public TaskCompletionSource Completion { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    }
+
+    private sealed class PendingVote(Vote vote) : QueueItem
     {
         public Vote Vote { get; } = vote;
 
