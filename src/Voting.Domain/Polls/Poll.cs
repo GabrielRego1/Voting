@@ -89,8 +89,12 @@ public sealed class Poll
 
     public PollStatus StatusAt(DateTimeOffset now)
     {
-        _ = now;
-        return OpenedAt is null ? PollStatus.Created : PollStatus.Open;
+        if (OpenedAt is null)
+        {
+            return PollStatus.Created;
+        }
+
+        return now <= ClosesAt ? PollStatus.Open : PollStatus.Closed;
     }
 
     /// <summary>
@@ -98,7 +102,16 @@ public sealed class Poll
     /// </summary>
     public VoteEvaluation EvaluateVote(Guid participantId, DateTimeOffset receivedAt)
     {
-        _ = receivedAt;
+        if (OpenedAt is null || receivedAt < OpenedAt)
+        {
+            return VoteEvaluation.Rejected(VoteRejection.VotingNotOpen);
+        }
+
+        if (receivedAt > ClosesAt)
+        {
+            return VoteEvaluation.Rejected(VoteRejection.VotingClosed);
+        }
+
         for (var i = 0; i < Participants.Count; i++)
         {
             if (Participants[i].Id == participantId)

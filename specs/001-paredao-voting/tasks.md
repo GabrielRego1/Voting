@@ -232,18 +232,18 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
 
 ### PLN-09 — Janela de votação
 
-- [ ] PLN-09-001 [P] [US2] Acrescentar testes que falham em `tests/Voting.Domain.Tests/Polls/PollVoteEvaluationTests.cs`.
+- [X] PLN-09-001 [P] [US2] Acrescentar testes que falham em `tests/Voting.Domain.Tests/Polls/PollVoteEvaluationTests.cs`.
   - `receivedAt == ClosesAt` é aceito.
   - `receivedAt == ClosesAt + 1 tick` → `voting_closed`.
   - Paredão não aberto → `voting_not_open`; `receivedAt < OpenedAt` → `voting_not_open`.
   - `StatusAt(ClosesAt + 1 tick)` → `Closed`.
-- [ ] PLN-09-002 [P] [US2] Escrever testes de integração que falham em `tests/Voting.Api.Tests/Votes/VotingWindowTests.cs`, usando o `FakeTimeProvider` da `VotingApiFactory`.
+- [X] PLN-09-002 [P] [US2] Escrever testes de integração que falham em `tests/Voting.Api.Tests/Votes/VotingWindowTests.cs`, usando o `FakeTimeProvider` da `VotingApiFactory`.
   - Voto antes de abrir → `409 voting_not_open`.
   - Voto com o relógio avançado 10 s → `201`.
   - Voto exatamente em `closesAt` → `201`.
   - Relógio avançado para `closesAt + 1 ms` → `409 voting_closed`, e a contagem em `votes` não muda.
   - `GET /polls/{id}` → `status: Closed`.
-- [ ] PLN-09-003 [US2] Completar `EvaluateVote` e `StatusAt` em `src/Voting.Domain/Polls/Poll.cs`.
+- [X] PLN-09-003 [US2] Completar `EvaluateVote` e `StatusAt` em `src/Voting.Domain/Polls/Poll.cs`.
   - Regras `voting_not_open` e `voting_closed` em `src/Voting.Domain/Polls/VoteRejection.cs`.
   - Estado `Closed`.
   - PLN-09-001 e PLN-09-002 devem passar.

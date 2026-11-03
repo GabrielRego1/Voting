@@ -41,6 +41,54 @@ public sealed class PollVoteEvaluationTests
         Assert.All(evaluations, e => Assert.True(e.IsAccepted));
     }
 
+    [Fact]
+    public void EvaluateVote_ReceivedExactlyAtClosesAt_IsAccepted()
+    {
+        var poll = OpenPoll();
+
+        var evaluation = poll.EvaluateVote(poll.Participants[0].Id, poll.ClosesAt!.Value);
+
+        Assert.True(evaluation.IsAccepted);
+    }
+
+    [Fact]
+    public void EvaluateVote_ReceivedOneTickAfterClosesAt_IsRejectedWithVotingClosed()
+    {
+        var poll = OpenPoll();
+
+        var evaluation = poll.EvaluateVote(poll.Participants[0].Id, poll.ClosesAt!.Value.AddTicks(1));
+
+        Assert.Equal("voting_closed", evaluation.Rejection!.Code);
+    }
+
+    [Fact]
+    public void EvaluateVote_PollNotOpened_IsRejectedWithVotingNotOpen()
+    {
+        var poll = Poll.Create(["Ana", "Bruno", "Carla"], Now).Value;
+
+        var evaluation = poll.EvaluateVote(poll.Participants[0].Id, Now.AddSeconds(1));
+
+        Assert.Equal("voting_not_open", evaluation.Rejection!.Code);
+    }
+
+    [Fact]
+    public void EvaluateVote_ReceivedBeforeOpenedAt_IsRejectedWithVotingNotOpen()
+    {
+        var poll = OpenPoll();
+
+        var evaluation = poll.EvaluateVote(poll.Participants[0].Id, Now.AddTicks(-1));
+
+        Assert.Equal("voting_not_open", evaluation.Rejection!.Code);
+    }
+
+    [Fact]
+    public void StatusAt_OneTickAfterClosesAt_ReturnsClosed()
+    {
+        var poll = OpenPoll();
+
+        Assert.Equal(PollStatus.Closed, poll.StatusAt(poll.ClosesAt!.Value.AddTicks(1)));
+    }
+
     private static Poll OpenPoll()
     {
         var poll = Poll.Create(["Ana", "Bruno", "Carla"], Now).Value;
