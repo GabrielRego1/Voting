@@ -19,6 +19,7 @@ app.UseStatusCodePages();
 
 app.MapPollEndpoints();
 app.MapVoteEndpoints();
+app.MapResultEndpoints();
 
 app.Run();
 

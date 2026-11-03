@@ -307,14 +307,14 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
 
 ### PLN-12 — API: resultado
 
-- [ ] PLN-12-001 [US3] Escrever testes de integração que falham em `tests/Voting.Api.Tests/Results/ResultEndpointsTests.cs`.
+- [X] PLN-12-001 [US3] Escrever testes de integração que falham em `tests/Voting.Api.Tests/Results/ResultEndpointsTests.cs`.
   - `GET /polls/{id}/result` com o paredão aberto → `409 result_not_available`.
   - Após 600/300/100 votos e o relógio além de `closesAt` → `200` com `totalVotes: 1000`, porcentagens `60.00`/`30.00`/`10.00`, `outcome: Eliminated` e `eliminated` igual ao primeiro.
   - 400/400/200 → `outcome: Tie`, `tiedParticipants` com os dois primeiros e `eliminated: null`.
   - Sem votos → `outcome: NoVotes`.
   - O resultado fica disponível em até 5 s de relógio após `closesAt`.
   - Paredão inexistente → `404 poll_not_found`.
-- [ ] PLN-12-002 [US3] Implementar `src/Voting.Api/Endpoints/ResultEndpoints.cs` (`GET /polls/{pollId}/result`), conforme o schema `PollResult` do contrato.
+- [X] PLN-12-002 [US3] Implementar `src/Voting.Api/Endpoints/ResultEndpoints.cs` (`GET /polls/{pollId}/result`), conforme o schema `PollResult` do contrato.
 
 **Checkpoint**: US1 + US2 + US3 formam o paredão completo de ponta a ponta.
 
