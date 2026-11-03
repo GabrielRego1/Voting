@@ -260,7 +260,7 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
 
 ### PLN-10 — Domínio: apuração
 
-- [ ] PLN-10-001 [P] [US3] Escrever testes que falham em `tests/Voting.Domain.Tests/Results/ResultCalculatorTests.cs`.
+- [X] PLN-10-001 [P] [US3] Escrever testes que falham em `tests/Voting.Domain.Tests/Results/ResultCalculatorTests.cs`.
   - 600/300/100 → 60.00/30.00/10.00, `Eliminated` com o primeiro.
   - 400/400/200 → `Tie` com os dois primeiros.
   - 1/1/1 → `Tie` com os três, porcentagens somando exatamente `100.00` (ex.: 33.34/33.33/33.33).
@@ -268,7 +268,7 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
   - 2/1/0 → o participante com 0 votos aparece com `0.00`.
   - Quando a porcentagem arredondada empata mas a contagem não, decide a contagem exata.
   - Para 200 distribuições aleatórias com total > 0, a soma é sempre `100.00`.
-- [ ] PLN-10-002 [US3] Implementar a apuração.
+- [X] PLN-10-002 [US3] Implementar a apuração.
   - `src/Voting.Domain/Results/Outcome.cs` (`Eliminated`, `Tie`, `NoVotes`).
   - `src/Voting.Domain/Results/ParticipantTally.cs` (`ParticipantId`, `Name`, `Votes` long, `Percentage` decimal com 2 casas).
   - `src/Voting.Domain/Results/PollResult.cs`.
