@@ -20,7 +20,7 @@ API_BIN  := src/Voting.Api/bin/$(CONFIGURATION)/net10.0
 SHELL := /bin/bash
 .SHELLFLAGS := -eu -o pipefail -c
 
-.PHONY: help setup test run load down
+.PHONY: help setup test run load stress down
 
 help: ## List available targets
 	@grep -E '^[a-z]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-8s %s\n", $$1, $$2}'
@@ -57,6 +57,9 @@ load: setup ## Start the API in the background and run the load generator agains
 	dotnet run --project tools/Voting.Workload -c $(CONFIGURATION) --no-build -- \
 	  --base-url $(BASE_URL) --rate $(RATE) --duration $(DURATION) \
 	  --distribution $(DISTRIBUTION) --retry-fraction $(RETRY_FRACTION) --result-timeout $(RESULT_TIMEOUT) --output $(OUTPUT)
+
+stress: ## Find the max sustainable vote rate (recreates the local DB); e.g. `make stress BENCH_VERSION=v1`
+	tools/stress/stress.sh
 
 down: ## Stop PostgreSQL
 	docker compose down

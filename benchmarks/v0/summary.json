@@ -1,0 +1,486 @@
+{
+  "schemaVersion": 1,
+  "version": "v0",
+  "environment": {
+    "version": "v0",
+    "commit": "6218bfa258662417efbacef3ee2925a15c8524c3",
+    "dirtyTree": false,
+    "date": "2026-11-02T23:15:14-03:00",
+    "machine": {
+      "cpu": "AMD Ryzen 7 5825U with Radeon Graphics",
+      "logicalCpus": 16,
+      "memory": "14Gi",
+      "kernel": "7.0.0-42-generic",
+      "power": {
+        "onAc": false,
+        "profile": "power-saver",
+        "governor": "powersave",
+        "batteryPercent": 17,
+        "note": "recorded right after the run (stress.sh did not capture power state yet)"
+      }
+    },
+    "software": {
+      "dotnet": "10.0.114",
+      "postgres": "postgres (PostgreSQL) 17.11 (Debian 17.11-1.pgdg13+2)"
+    },
+    "cpuPinning": {
+      "api": "0-7",
+      "postgres": "8-11",
+      "generator": "12-15"
+    },
+    "parameters": {
+      "durationSeconds": 30,
+      "connections": 1024,
+      "distribution": "50,30,20",
+      "retryFraction": 0.05,
+      "minAchievedFraction": 0.98,
+      "rampRates": [
+        10000,
+        15000,
+        20000,
+        25000,
+        30000,
+        40000,
+        50000,
+        60000
+      ],
+      "refine": true,
+      "refineStep": 1000,
+      "confirmRuns": 2
+    }
+  },
+  "criteria": {
+    "minAchievedFraction": 0.98,
+    "rejectionsAllowed": [
+      "voting_closed"
+    ],
+    "transportErrorsAllowed": 0,
+    "checks": [
+      "acceptedEqualsTotalVotes",
+      "noDuplicatesFromReplays",
+      "p95WithinTarget (p95 <= 200 ms)"
+    ]
+  },
+  "result": {
+    "maxSustainableRate": 15000,
+    "maxSustainableWorstP95Ms": 11.008,
+    "maxSustainableAttempts": 1,
+    "breakingPoint": {
+      "rate": 20000,
+      "tag": "confirm-20000-1",
+      "failures": [
+        "checks.p95WithinTarget"
+      ],
+      "bottleneck": "unknown",
+      "bottleneckDetail": "nenhum componente acima de 85% de CPU; o mais ocupado foi generator (50%)"
+    },
+    "unstableRates": []
+  },
+  "steps": [
+    {
+      "tag": "ramp-10000",
+      "phase": "ramp",
+      "rate": 10000,
+      "exitCode": 0,
+      "passed": true,
+      "failures": [],
+      "resources": {
+        "samples": 29,
+        "apiCpuPercent": {
+          "avg": 126.3,
+          "max": 155.9
+        },
+        "postgresCpuPercent": {
+          "avg": 34.8,
+          "max": 39.9
+        },
+        "generatorCpuPercent": {
+          "avg": 44.6,
+          "max": 99.9
+        },
+        "apiRssMbMax": 185.6,
+        "generatorRssMbMax": 182.9,
+        "postgresMemMbMax": 473.7
+      },
+      "achievedRate": 9997.3,
+      "sent": 300000,
+      "accepted": 299874,
+      "acceptedPerSecond": 9995.8,
+      "replayed": 14925,
+      "retried": 0,
+      "rejected": {
+        "voting_closed": 129
+      },
+      "transportErrors": 0,
+      "latencyMs": {
+        "p50": 6.4521,
+        "p95": 8.3822,
+        "p99": 14.2354,
+        "max": 46.1704
+      },
+      "totalVotes": 299874,
+      "checks": {
+        "acceptedEqualsTotalVotes": true,
+        "noDuplicatesFromReplays": true,
+        "p95WithinTarget": true
+      }
+    },
+    {
+      "tag": "ramp-15000",
+      "phase": "ramp",
+      "rate": 15000,
+      "exitCode": 0,
+      "passed": true,
+      "failures": [],
+      "resources": {
+        "samples": 29,
+        "apiCpuPercent": {
+          "avg": 165.5,
+          "max": 228.8
+        },
+        "postgresCpuPercent": {
+          "avg": 46.0,
+          "max": 61.4
+        },
+        "generatorCpuPercent": {
+          "avg": 59.0,
+          "max": 134.9
+        },
+        "apiRssMbMax": 201.1,
+        "generatorRssMbMax": 220.5,
+        "postgresMemMbMax": 958.2
+      },
+      "achievedRate": 14997.4,
+      "sent": 450000,
+      "accepted": 449752,
+      "acceptedPerSecond": 14991.7,
+      "replayed": 22529,
+      "retried": 0,
+      "rejected": {
+        "voting_closed": 248
+      },
+      "transportErrors": 0,
+      "latencyMs": {
+        "p50": 7.8427,
+        "p95": 11.008,
+        "p99": 26.0835,
+        "max": 61.269
+      },
+      "totalVotes": 449752,
+      "checks": {
+        "acceptedEqualsTotalVotes": true,
+        "noDuplicatesFromReplays": true,
+        "p95WithinTarget": true
+      }
+    },
+    {
+      "tag": "ramp-20000",
+      "phase": "ramp",
+      "rate": 20000,
+      "exitCode": 0,
+      "passed": true,
+      "failures": [],
+      "resources": {
+        "samples": 29,
+        "apiCpuPercent": {
+          "avg": 219.0,
+          "max": 283.9
+        },
+        "postgresCpuPercent": {
+          "avg": 57.5,
+          "max": 65.3
+        },
+        "generatorCpuPercent": {
+          "avg": 83.2,
+          "max": 178.9
+        },
+        "apiRssMbMax": 220.4,
+        "generatorRssMbMax": 306.1,
+        "postgresMemMbMax": 1468.0
+      },
+      "achievedRate": 19994.4,
+      "sent": 600000,
+      "accepted": 599698,
+      "acceptedPerSecond": 19989.9,
+      "replayed": 29925,
+      "retried": 0,
+      "rejected": {
+        "voting_closed": 309
+      },
+      "transportErrors": 0,
+      "latencyMs": {
+        "p50": 9.6243,
+        "p95": 21.5842,
+        "p99": 52.6465,
+        "max": 124.406
+      },
+      "totalVotes": 599698,
+      "checks": {
+        "acceptedEqualsTotalVotes": true,
+        "noDuplicatesFromReplays": true,
+        "p95WithinTarget": true
+      }
+    },
+    {
+      "tag": "ramp-25000",
+      "phase": "ramp",
+      "rate": 25000,
+      "exitCode": 1,
+      "passed": false,
+      "failures": [
+        "checks.p95WithinTarget"
+      ],
+      "resources": {
+        "samples": 30,
+        "apiCpuPercent": {
+          "avg": 273.5,
+          "max": 426.7
+        },
+        "postgresCpuPercent": {
+          "avg": 82.3,
+          "max": 309.7
+        },
+        "generatorCpuPercent": {
+          "avg": 133.8,
+          "max": 251.8
+        },
+        "apiRssMbMax": 276.9,
+        "generatorRssMbMax": 896.2,
+        "postgresMemMbMax": 1821.8
+      },
+      "achievedRate": 24993.3,
+      "sent": 750000,
+      "accepted": 684728,
+      "acceptedPerSecond": 22824.3,
+      "replayed": 32237,
+      "retried": 0,
+      "rejected": {
+        "voting_closed": 67351
+      },
+      "transportErrors": 0,
+      "latencyMs": {
+        "p50": 13.7044,
+        "p95": 4505.3192,
+        "p99": 4886.5599,
+        "max": 5085.9833
+      },
+      "totalVotes": 684728,
+      "checks": {
+        "acceptedEqualsTotalVotes": true,
+        "noDuplicatesFromReplays": true,
+        "p95WithinTarget": false
+      },
+      "bottleneck": "unknown",
+      "bottleneckDetail": "nenhum componente acima de 85% de CPU; o mais ocupado foi api (34%)"
+    },
+    {
+      "tag": "refine-22500",
+      "phase": "refine",
+      "rate": 22500,
+      "exitCode": 1,
+      "passed": false,
+      "failures": [
+        "checks.p95WithinTarget"
+      ],
+      "resources": {
+        "samples": 30,
+        "apiCpuPercent": {
+          "avg": 253.3,
+          "max": 351.7
+        },
+        "postgresCpuPercent": {
+          "avg": 86.8,
+          "max": 227.6
+        },
+        "generatorCpuPercent": {
+          "avg": 207.5,
+          "max": 301.7
+        },
+        "apiRssMbMax": 270.9,
+        "generatorRssMbMax": 2247.7,
+        "postgresMemMbMax": 1866.5
+      },
+      "achievedRate": 22495.5,
+      "sent": 675000,
+      "accepted": 477506,
+      "acceptedPerSecond": 15916.9,
+      "replayed": 16974,
+      "retried": 0,
+      "rejected": {
+        "voting_closed": 204542
+      },
+      "transportErrors": 0,
+      "latencyMs": {
+        "p50": 6191.1686,
+        "p95": 9071.8457,
+        "p99": 9194.0235,
+        "max": 9283.3225
+      },
+      "totalVotes": 477506,
+      "checks": {
+        "acceptedEqualsTotalVotes": true,
+        "noDuplicatesFromReplays": true,
+        "p95WithinTarget": false
+      },
+      "bottleneck": "unknown",
+      "bottleneckDetail": "nenhum componente acima de 85% de CPU; o mais ocupado foi generator (52%)"
+    },
+    {
+      "tag": "refine-21000",
+      "phase": "refine",
+      "rate": 21000,
+      "exitCode": 1,
+      "passed": false,
+      "failures": [
+        "checks.p95WithinTarget"
+      ],
+      "resources": {
+        "samples": 30,
+        "apiCpuPercent": {
+          "avg": 253.2,
+          "max": 343.7
+        },
+        "postgresCpuPercent": {
+          "avg": 86.3,
+          "max": 273.0
+        },
+        "generatorCpuPercent": {
+          "avg": 207.4,
+          "max": 306.7
+        },
+        "apiRssMbMax": 278.0,
+        "generatorRssMbMax": 2135.2,
+        "postgresMemMbMax": 1458.4
+      },
+      "achievedRate": 20991.9,
+      "sent": 630000,
+      "accepted": 481179,
+      "acceptedPerSecond": 16039.3,
+      "replayed": 18373,
+      "retried": 0,
+      "rejected": {
+        "voting_closed": 154591
+      },
+      "transportErrors": 0,
+      "latencyMs": {
+        "p50": 4820.1776,
+        "p95": 7501.9037,
+        "p99": 7813.6362,
+        "max": 7942.7762
+      },
+      "totalVotes": 481179,
+      "checks": {
+        "acceptedEqualsTotalVotes": true,
+        "noDuplicatesFromReplays": true,
+        "p95WithinTarget": false
+      },
+      "bottleneck": "unknown",
+      "bottleneckDetail": "nenhum componente acima de 85% de CPU; o mais ocupado foi generator (52%)"
+    },
+    {
+      "tag": "confirm-20000-1",
+      "phase": "confirm",
+      "rate": 20000,
+      "exitCode": 1,
+      "passed": false,
+      "failures": [
+        "checks.p95WithinTarget"
+      ],
+      "resources": {
+        "samples": 30,
+        "apiCpuPercent": {
+          "avg": 250.3,
+          "max": 386.6
+        },
+        "postgresCpuPercent": {
+          "avg": 90.0,
+          "max": 305.0
+        },
+        "generatorCpuPercent": {
+          "avg": 199.2,
+          "max": 302.8
+        },
+        "apiRssMbMax": 294.5,
+        "generatorRssMbMax": 1416.5,
+        "postgresMemMbMax": 1738.2
+      },
+      "achievedRate": 19978.1,
+      "sent": 600000,
+      "accepted": 476871,
+      "acceptedPerSecond": 15895.7,
+      "replayed": 19605,
+      "retried": 0,
+      "rejected": {
+        "voting_closed": 127538
+      },
+      "transportErrors": 0,
+      "latencyMs": {
+        "p50": 3610.0365,
+        "p95": 6450.8161,
+        "p99": 6627.4082,
+        "max": 6738.5069
+      },
+      "totalVotes": 476871,
+      "checks": {
+        "acceptedEqualsTotalVotes": true,
+        "noDuplicatesFromReplays": true,
+        "p95WithinTarget": false
+      },
+      "bottleneck": "unknown",
+      "bottleneckDetail": "nenhum componente acima de 85% de CPU; o mais ocupado foi generator (50%)"
+    },
+    {
+      "tag": "confirm-20000-2",
+      "phase": "confirm",
+      "rate": 20000,
+      "exitCode": 1,
+      "passed": false,
+      "failures": [
+        "achievedRate",
+        "checks.p95WithinTarget"
+      ],
+      "resources": {
+        "samples": 30,
+        "apiCpuPercent": {
+          "avg": 243.5,
+          "max": 353.8
+        },
+        "postgresCpuPercent": {
+          "avg": 89.3,
+          "max": 283.1
+        },
+        "generatorCpuPercent": {
+          "avg": 190.7,
+          "max": 260.8
+        },
+        "apiRssMbMax": 264.5,
+        "generatorRssMbMax": 1894.9,
+        "postgresMemMbMax": 1952.8
+      },
+      "achievedRate": 19465.1,
+      "sent": 600000,
+      "accepted": 447035,
+      "acceptedPerSecond": 14901.2,
+      "replayed": 17591,
+      "retried": 0,
+      "rejected": {
+        "voting_closed": 157872
+      },
+      "transportErrors": 0,
+      "latencyMs": {
+        "p50": 4357.2358,
+        "p95": 8334.6309,
+        "p99": 8784.5289,
+        "max": 8987.7459
+      },
+      "totalVotes": 447035,
+      "checks": {
+        "acceptedEqualsTotalVotes": true,
+        "noDuplicatesFromReplays": true,
+        "p95WithinTarget": false
+      },
+      "bottleneck": "unknown",
+      "bottleneckDetail": "nenhum componente acima de 85% de CPU; o mais ocupado foi generator (48%)"
+    }
+  ]
+}

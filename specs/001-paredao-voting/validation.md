@@ -70,3 +70,7 @@ Roteiro: gerador com `--rate 10000 --duration 30`; aos ~10 s a API recebeu `kill
 - FR-020 atendido: o `closesAt` persistido continuou valendo depois do reinício, e os 5.015 votos sem confirmação durante a queda foram reenviados com as mesmas chaves e confirmados (nenhum perdido, nenhum duplicado).
 - O `p95WithinTarget` saiu `false` nesta execução (código de saída `1`) porque a latência inclui as retentativas durante a queda proposital. A seção 6 não exige esse check; o SC-008 é medido na seção 4.
 - Ajuste feito para viabilizar o cenário: o backoff entre as 3 tentativas do gerador passou a ser de 1 s e 2 s. Com esperas curtas, um voto já commitado cuja resposta se perdeu na queda esgotaria as tentativas antes do reinício e não seria contado em `accepted`.
+
+## Limite de capacidade (baseline v0)
+
+O teste de limite (rampa até a ruptura, com CPUs fixas para API, PostgreSQL e gerador) está em [`benchmarks/v0/README.md`](../../benchmarks/v0/README.md). Para repetir em versões futuras: `make stress BENCH_VERSION=<versão>` e `python3 tools/stress/compare.py benchmarks/v0 benchmarks/<versão>`.

@@ -1,0 +1,9 @@
+{"tag":"warmup","phase":"warmup","rate":2000,"exitCode":0,"passed":true,"failures":[]}
+{"tag":"ramp-10000","phase":"ramp","rate":10000,"exitCode":0,"passed":true,"failures":[]}
+{"tag":"ramp-15000","phase":"ramp","rate":15000,"exitCode":0,"passed":true,"failures":[]}
+{"tag":"ramp-20000","phase":"ramp","rate":20000,"exitCode":0,"passed":true,"failures":[]}
+{"tag":"ramp-25000","phase":"ramp","rate":25000,"exitCode":1,"passed":false,"failures":["checks.p95WithinTarget"]}
+{"tag":"refine-22500","phase":"refine","rate":22500,"exitCode":1,"passed":false,"failures":["checks.p95WithinTarget"]}
+{"tag":"refine-21000","phase":"refine","rate":21000,"exitCode":1,"passed":false,"failures":["checks.p95WithinTarget"]}
+{"tag":"confirm-20000-1","phase":"confirm","rate":20000,"exitCode":1,"passed":false,"failures":["checks.p95WithinTarget"]}
+{"tag":"confirm-20000-2","phase":"confirm","rate":20000,"exitCode":1,"passed":false,"failures":["achievedRate","checks.p95WithinTarget"]}

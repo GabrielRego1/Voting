@@ -1,0 +1,68 @@
+{
+  "pollId": "01a19f32-a6ed-75e1-bdbc-6e309cbe4fb1",
+  "parameters": {
+    "rate": 25000,
+    "durationSeconds": 30,
+    "distribution": [
+      50,
+      30,
+      20
+    ],
+    "retryFraction": 0.05,
+    "connections": 1024
+  },
+  "counts": {
+    "sent": 750000,
+    "accepted": 684728,
+    "replayed": 32237,
+    "retried": 0,
+    "rejected": {
+      "voting_closed": 67351
+    },
+    "transportErrors": 0
+  },
+  "achievedRate": 24993.3,
+  "latencyMs": {
+    "p50": 13.7044,
+    "p95": 4505.3192,
+    "p99": 4886.5599,
+    "max": 5085.9833
+  },
+  "result": {
+    "pollId": "01a19f32-a6ed-75e1-bdbc-6e309cbe4fb1",
+    "totalVotes": 684728,
+    "outcome": "Eliminated",
+    "eliminated": {
+      "id": "01a19f32-a6ed-7e27-a9b5-5e24d3b12d24",
+      "name": "Ana",
+      "position": 1
+    },
+    "tiedParticipants": [],
+    "tallies": [
+      {
+        "participantId": "01a19f32-a6ed-7e27-a9b5-5e24d3b12d24",
+        "name": "Ana",
+        "votes": 341925,
+        "percentage": 49.94
+      },
+      {
+        "participantId": "01a19f32-a6ed-764a-a0ca-81fbc5153700",
+        "name": "Bruno",
+        "votes": 205485,
+        "percentage": 30.01
+      },
+      {
+        "participantId": "01a19f32-a6ed-7902-acb1-8e6ee85f3587",
+        "name": "Carla",
+        "votes": 137318,
+        "percentage": 20.05
+      }
+    ],
+    "finalizedAt": "2026-11-03T02:18:12.859655\u002B00:00"
+  },
+  "checks": {
+    "acceptedEqualsTotalVotes": true,
+    "noDuplicatesFromReplays": true,
+    "p95WithinTarget": false
+  }
+}

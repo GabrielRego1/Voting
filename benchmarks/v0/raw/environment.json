@@ -1,0 +1,48 @@
+{
+  "version": "v0",
+  "commit": "6218bfa258662417efbacef3ee2925a15c8524c3",
+  "dirtyTree": false,
+  "date": "2026-11-02T23:15:14-03:00",
+  "machine": {
+    "cpu": "AMD Ryzen 7 5825U with Radeon Graphics",
+    "logicalCpus": 16,
+    "memory": "14Gi",
+    "kernel": "7.0.0-42-generic",
+    "power": {
+      "onAc": false,
+      "profile": "power-saver",
+      "governor": "powersave",
+      "batteryPercent": 17,
+      "note": "recorded right after the run (stress.sh did not capture power state yet)"
+    }
+  },
+  "software": {
+    "dotnet": "10.0.114",
+    "postgres": "postgres (PostgreSQL) 17.11 (Debian 17.11-1.pgdg13+2)"
+  },
+  "cpuPinning": {
+    "api": "0-7",
+    "postgres": "8-11",
+    "generator": "12-15"
+  },
+  "parameters": {
+    "durationSeconds": 30,
+    "connections": 1024,
+    "distribution": "50,30,20",
+    "retryFraction": 0.05,
+    "minAchievedFraction": 0.98,
+    "rampRates": [
+      10000,
+      15000,
+      20000,
+      25000,
+      30000,
+      40000,
+      50000,
+      60000
+    ],
+    "refine": true,
+    "refineStep": 1000,
+    "confirmRuns": 2
+  }
+}
