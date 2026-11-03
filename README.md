@@ -54,22 +54,6 @@ Pré-requisitos: .NET SDK 10 e Docker em execução (portas `5080` e `5432` livr
 | `make stress BENCH_VERSION=<v>` | Rampa até a ruptura e gera o benchmark em `benchmarks/<v>/` (**recria o banco local**) |
 | `make down` | Para o PostgreSQL |
 
-## Estrutura
-
-```text
-src/
-  Voting.Domain/          # regras: poll, janela de 30 s, avaliação de voto, cálculo do resultado
-  Voting.Application/     # casos de uso: criar/abrir poll, votar, finalizar, consultar resultado
-  Voting.Infrastructure/  # PostgreSQL (Npgsql), writer de group commit, cache, finalizador
-  Voting.Api/             # minimal API, mapeamento de erros
-tools/
-  Voting.Workload/        # gerador de carga em modelo aberto (contracts/workload-cli.md)
-  stress/                 # rampa de capacidade, consolidação e comparação entre versões
-tests/                    # testes por projeto (unidade + integração)
-specs/001-paredao-voting/ # spec, plan, tasks, contratos, quickstart e validação
-benchmarks/               # evidências de capacidade por versão
-```
-
 ## Resultados
 
 | Medição | Resultado | Fonte |
