@@ -175,7 +175,7 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
 
 ### PLN-07 — Gravação durável em lote
 
-- [ ] PLN-07-001 [P] [US1] Escrever testes de integração que falham em `tests/Voting.Infrastructure.Tests/Votes/VoteBatchWriterTests.cs`.
+- [X] PLN-07-001 [P] [US1] Escrever testes de integração que falham em `tests/Voting.Infrastructure.Tests/Votes/VoteBatchWriterTests.cs`.
   - Após `await WriteAsync` retornar `Accepted`, a linha já existe em `votes`.
   - 5.000 escritas concorrentes resultam em 5.000 linhas, com a mesma quantidade de `Accepted`.
   - Mesma chave e mesmo participante → `Replayed` com o mesmo `voteId` e o mesmo `receivedAt`.
@@ -183,15 +183,15 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
   - Duas escritas com a mesma chave no mesmo lote: a primeira é `Accepted` e a segunda é `Replayed` ou `Conflict`.
   - Com `Capacity = 1` e o writer parado, a escrita excedente retorna `Overloaded`.
   - O writer grava lotes mesmo com um `FakeTimeProvider` registrado e nunca avançado, provando que a espera entre lotes usa tempo real.
-- [ ] PLN-07-002 [P] [US1] Escrever teste de integração que falha em `tests/Voting.Infrastructure.Tests/Votes/VoteBatchWriterFailureTests.cs`.
+- [X] PLN-07-002 [P] [US1] Escrever teste de integração que falha em `tests/Voting.Infrastructure.Tests/Votes/VoteBatchWriterFailureTests.cs`.
   - Usa um `PostgreSqlContainer` **dedicado**, fora da `PostgresCollection`, para não afetar outros testes.
   - Com o container pausado no meio de um lote, todas as escritas do lote falham e nenhuma é confirmada.
-- [ ] PLN-07-003 [P] [US1] Escrever testes que falham.
+- [X] PLN-07-003 [P] [US1] Escrever testes que falham.
   - `tests/Voting.Infrastructure.Tests/Persistence/CachedPollRepositoryTests.cs`:
     - depois do primeiro `GetAsync` de um paredão aberto, as leituras seguintes não vão ao banco (contagem de chamadas no repositório interno);
     - `TryOpenAsync` invalida o snapshot.
   - `tests/Voting.Infrastructure.Tests/Persistence/VoteImmutabilityTests.cs`: `UPDATE` e `DELETE` em `votes` falham com a exceção do trigger `votes_append_only` (FR-009).
-- [ ] PLN-07-004 [US1] Implementar o writer em lote.
+- [X] PLN-07-004 [US1] Implementar o writer em lote.
   - `src/Voting.Infrastructure/Votes/VoteWriterOptions.cs`: `MaxBatchSize = 1000`, `MaxBatchDelay = 5 ms`, `Capacity = 50000`, ligados à seção `VoteWriter` da configuração.
   - `src/Voting.Infrastructure/Votes/VoteBatchWriter.cs` é um `BackgroundService` + `IVoteWriter`.
     - `Channel` limitado com `TaskCompletionSource` por voto.
@@ -200,10 +200,10 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
     - Releitura das chaves em conflito para decidir entre `Replayed` e `Conflict`.
     - Os TCS só são completados após o commit.
     - Exceção no lote → `TrySetException` em todos os votos do lote.
-- [ ] PLN-07-005 [US1] Implementar `src/Voting.Infrastructure/Persistence/CachedPollRepository.cs`, um decorator de `IPollRepository`.
+- [X] PLN-07-005 [US1] Implementar `src/Voting.Infrastructure/Persistence/CachedPollRepository.cs`, um decorator de `IPollRepository`.
   - Mantém o snapshot do paredão aberto, imutável após `Open`, e o invalida em `TryOpenAsync`.
   - Registrar o decorator e o `VoteBatchWriter` em `src/Voting.Infrastructure/DependencyInjection.cs`.
-- [ ] PLN-07-006 [US1] Criar `src/Voting.Infrastructure/Persistence/Sql/002_votes_append_only.sql` (embedded resource), com a função e o trigger `votes_append_only` (`BEFORE UPDATE OR DELETE ON votes` → `RAISE EXCEPTION`) via `CREATE OR REPLACE`. PLN-07-003 (`VoteImmutabilityTests`) deve passar.
+- [X] PLN-07-006 [US1] Criar `src/Voting.Infrastructure/Persistence/Sql/002_votes_append_only.sql` (embedded resource), com a função e o trigger `votes_append_only` (`BEFORE UPDATE OR DELETE ON votes` → `RAISE EXCEPTION`) via `CREATE OR REPLACE`. PLN-07-003 (`VoteImmutabilityTests`) deve passar.
 
 ### PLN-08 — API: endpoint de voto
 
