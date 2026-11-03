@@ -18,6 +18,7 @@ app.UseExceptionHandler();
 app.UseStatusCodePages();
 
 app.MapPollEndpoints();
+app.MapVoteEndpoints();
 
 app.Run();
 

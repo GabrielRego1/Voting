@@ -207,7 +207,7 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
 
 ### PLN-08 — API: endpoint de voto
 
-- [ ] PLN-08-001 [US1] Escrever testes de integração que falham em `tests/Voting.Api.Tests/Votes/VoteEndpointsTests.cs`.
+- [X] PLN-08-001 [US1] Escrever testes de integração que falham em `tests/Voting.Api.Tests/Votes/VoteEndpointsTests.cs`.
   - `POST /polls/{id}/votes` com `Idempotency-Key: k1` → `201` com `VoteReceipt`.
   - Repetir com `k1` → `200` com o mesmo `voteId`.
   - `k1` com outro participante → `409 idempotency_key_conflict`.
@@ -216,7 +216,7 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
   - Paredão inexistente → `404 poll_not_found`.
   - 5 votos distintos no mesmo participante → 5 linhas em `votes`.
   - Com `VoteWriter:Capacity` mínimo e carga concorrente, respostas `503 overloaded` trazem `Retry-After`.
-- [ ] PLN-08-002 [US1] Implementar `src/Voting.Api/Endpoints/VoteEndpoints.cs` (`POST /polls/{pollId}/votes`).
+- [X] PLN-08-002 [US1] Implementar `src/Voting.Api/Endpoints/VoteEndpoints.cs` (`POST /polls/{pollId}/votes`).
   - Lê o header `Idempotency-Key` e o corpo `CastVoteRequest`.
   - Responde `201` para `Accepted` e `200` para `Replayed`; os erros saem via `ErrorMapping`.
 

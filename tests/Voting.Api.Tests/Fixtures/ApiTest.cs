@@ -43,6 +43,36 @@ public abstract class ApiTest : IAsyncLifetime
         return await response.Content.ReadFromJsonAsync<JsonElement>(Ct);
     }
 
+    protected Task<HttpResponseMessage> VoteAsync(Guid pollId, Guid participantId, string? idempotencyKey)
+    {
+        return VoteAsync(Client, pollId, participantId, idempotencyKey);
+    }
+
+    protected static async Task<HttpResponseMessage> VoteAsync(HttpClient client, Guid pollId, Guid participantId, string? idempotencyKey)
+    {
+        ArgumentNullException.ThrowIfNull(client);
+        using var request = new HttpRequestMessage(HttpMethod.Post, $"/polls/{pollId}/votes")
+        {
+            Content = JsonContent.Create(new { participantId }),
+        };
+        if (idempotencyKey is not null)
+        {
+            request.Headers.Add("Idempotency-Key", idempotencyKey);
+        }
+
+        return await client.SendAsync(request, Ct);
+    }
+
+    protected static Guid ParticipantId(JsonElement poll, int index)
+    {
+        return poll.GetProperty("participants")[index].GetProperty("id").GetGuid();
+    }
+
+    protected static Guid PollId(JsonElement poll)
+    {
+        return poll.GetProperty("id").GetGuid();
+    }
+
     protected static async Task<string?> ReadProblemCodeAsync(HttpResponseMessage response)
     {
         ArgumentNullException.ThrowIfNull(response);
