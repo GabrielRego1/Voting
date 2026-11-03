@@ -70,7 +70,7 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
 
 ### PLN-02 — Domínio: criação e abertura do paredão
 
-- [ ] PLN-02-001 Escrever testes que falham em `tests/Voting.Domain.Tests/Polls/PollTests.cs`.
+- [X] PLN-02-001 Escrever testes que falham em `tests/Voting.Domain.Tests/Polls/PollTests.cs`.
   - `Create` aceita "Exatamente 3, com nomes distintos (case-insensitive, sem espaços nas pontas) e não vazios".
   - Nome com "1–100 caracteres, normalizado com `Trim()`".
   - `Position` "1–3" na ordem recebida.
@@ -78,7 +78,7 @@ description: "Lista de tasks da feature 001-paredao-voting (Votação do Paredã
   - `Open(now)` define `OpenedAt = now` e `ClosesAt = now + 30 s`; um segundo `Open` falha com `poll_already_opened`.
   - `StatusAt(now)` retorna `Created` antes de abrir e `Open` em `OpenedAt` e em `ClosesAt` (limite inclusivo).
   - `Rehydrate(...)` reconstrói o mesmo estado.
-- [ ] PLN-02-002 Implementar o domínio do paredão.
+- [X] PLN-02-002 Implementar o domínio do paredão.
   - `src/Voting.Domain/Common/Result.cs`: resultado com erro tipado por `code`.
   - `src/Voting.Domain/Polls/Poll.cs`: `Id` Guid v7 via `Guid.CreateVersion7`, constante `Duration` de 30 s, `Create`, `Open`, `StatusAt` e `Rehydrate`.
   - `src/Voting.Domain/Polls/Participant.cs`.
