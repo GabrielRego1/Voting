@@ -16,6 +16,12 @@ internal sealed class VotingApiClient(HttpClient http) : IDisposable
     /// <summary>Total attempts per vote, including the first one.</summary>
     public const int MaxAttempts = 3;
 
+    /// <summary>
+    /// Wait before the second attempt, doubled for the third (1 s, then 2 s). It honors <c>Retry-After: 1</c> and
+    /// outlasts a quick API restart, so a vote committed just before a crash is confirmed by its retry.
+    /// </summary>
+    public static readonly TimeSpan RetryBaseDelay = TimeSpan.FromSeconds(1);
+
     public HttpClient Http => http;
 
     /// <summary>
@@ -76,7 +82,7 @@ internal sealed class VotingApiClient(HttpClient http) : IDisposable
             if (attempt > 1)
             {
                 onRetry();
-                await Task.Delay(TimeSpan.FromMilliseconds(100 * (attempt - 1)), cancellationToken);
+                await Task.Delay(RetryBaseDelay * Math.Pow(2, attempt - 2), cancellationToken);
             }
 
             response = await SendVoteAsync(uri, body, idempotencyKey, latency, cancellationToken);

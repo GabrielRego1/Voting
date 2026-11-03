@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Voting.Workload;
 
@@ -14,6 +15,7 @@ internal sealed record ReportCounts(
 
 internal sealed record ReportChecks(bool AcceptedEqualsTotalVotes, bool NoDuplicatesFromReplays, bool P95WithinTarget)
 {
+    [JsonIgnore]
     public bool AllPassed => AcceptedEqualsTotalVotes && NoDuplicatesFromReplays && P95WithinTarget;
 }
 
@@ -30,5 +32,6 @@ internal sealed record Report(
     ReportChecks Checks)
 {
     /// <summary>0 when every check passed, 1 otherwise.</summary>
+    [JsonIgnore]
     public int ExitCode => Checks.AllPassed ? 0 : 1;
 }

@@ -164,6 +164,8 @@ public sealed class ReportBuilderTests
         Assert.True(root.GetProperty("checks").GetProperty("acceptedEqualsTotalVotes").GetBoolean());
         Assert.True(root.GetProperty("checks").GetProperty("noDuplicatesFromReplays").GetBoolean());
         Assert.True(root.GetProperty("checks").GetProperty("p95WithinTarget").GetBoolean());
+        Assert.Equal(3, root.GetProperty("checks").EnumerateObject().Count());
+        Assert.False(root.TryGetProperty("exitCode", out _));
     }
 
     [Fact]
