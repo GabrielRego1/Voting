@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Text.Json;
 
 namespace Voting.Workload;
@@ -49,8 +50,31 @@ internal static class WorkloadApp
 
         var report = new ReportBuilder();
         var latency = new LatencyRecorder();
-        var sendingTime = await new LoadRunner(client, options, report, latency, new Random())
-            .RunAsync(poll, cancellationToken);
+        await error.WriteLineAsync(string.Create(
+            CultureInfo.InvariantCulture,
+            $"Poll {poll.Id} open; sending {options.Rate} votes/s for {options.DurationSeconds} s..."));
+
+        TimeSpan sendingTime;
+        using (var progressCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
+        {
+            var progress = new ProgressReporter(error, report, ProgressReporter.DefaultInterval)
+                .RunAsync(TimeSpan.FromSeconds(options.DurationSeconds), progressCancellation.Token);
+            try
+            {
+                sendingTime = await new LoadRunner(client, options, report, latency, new Random())
+                    .RunAsync(poll, cancellationToken);
+            }
+            finally
+            {
+                // Stop the progress lines before anything else writes to the error stream.
+                await progressCancellation.CancelAsync();
+                await progress;
+            }
+        }
+
+        await error.WriteLineAsync(string.Create(
+            CultureInfo.InvariantCulture,
+            $"Load finished in {sendingTime.TotalSeconds:0.0} s; waiting for the result (up to {options.ResultTimeoutSeconds} s)..."));
 
         if (afterLoad is not null)
         {

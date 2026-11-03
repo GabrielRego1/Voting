@@ -27,6 +27,8 @@ Respostas `503 overloaded` e erros de transporte são reenviados automaticamente
 
 ## Relatório (saída)
 
+O stdout contém apenas o relatório. O progresso sai no stderr: as fases da execução (poll aberta, carga concluída, espera do resultado) e, durante o envio, uma linha a cada 5 s com `sent`, `accepted`, `rejected`, `transport errors` e `in flight`.
+
 Formato `json` (o formato `text` apresenta os mesmos campos em tabela):
 
 ```json

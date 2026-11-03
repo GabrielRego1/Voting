@@ -53,6 +53,7 @@ load: setup ## Start the API in the background and run the load generator agains
 	curl -s -o /dev/null --retry-connrefused --retry 30 --retry-delay 1 \
 	  $(BASE_URL)/polls/00000000-0000-0000-0000-000000000000 \
 	  || { echo "error: API did not start; see $(API_LOG)"; exit 1; }
+	echo "API ready; running load (~$(DURATION) s of votes + up to $(RESULT_TIMEOUT) s for the result)..."
 	dotnet run --project tools/Voting.Workload -c $(CONFIGURATION) --no-build -- \
 	  --base-url $(BASE_URL) --rate $(RATE) --duration $(DURATION) \
 	  --distribution $(DISTRIBUTION) --retry-fraction $(RETRY_FRACTION) --result-timeout $(RESULT_TIMEOUT) --output $(OUTPUT)

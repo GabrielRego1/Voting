@@ -14,6 +14,11 @@ internal sealed record VoteResponse(int? StatusCode, string? ProblemCode)
 }
 
 /// <summary>
+/// Counters shown while the load runs.
+/// </summary>
+internal sealed record ProgressSnapshot(long Sent, long Accepted, long Rejected, long TransportErrors, long InFlight);
+
+/// <summary>
 /// Thread-safe counters of a run. <c>accepted</c> counts distinct confirmed keys; intentional resends count in
 /// <c>replayed</c>; rejections are grouped by problem <c>code</c>.
 /// </summary>
@@ -29,6 +34,7 @@ internal sealed class ReportBuilder
     private long _replaysCreated;
     private long _retried;
     private long _transportErrors;
+    private long _firstResponses;
 
     public void RecordSent()
     {
@@ -43,6 +49,11 @@ internal sealed class ReportBuilder
     public void RecordResponse(string key, VoteResponse response, bool intentionalReplay)
     {
         ArgumentNullException.ThrowIfNull(response);
+        if (!intentionalReplay)
+        {
+            Interlocked.Increment(ref _firstResponses);
+        }
+
         if (response.StatusCode is null)
         {
             Interlocked.Increment(ref _transportErrors);
@@ -75,6 +86,20 @@ internal sealed class ReportBuilder
         {
             Interlocked.Increment(ref _replayed);
         }
+    }
+
+    /// <summary>
+    /// Point-in-time view of the counters for progress output; <c>InFlight</c> counts votes still awaiting their first response.
+    /// </summary>
+    public ProgressSnapshot Snapshot()
+    {
+        var sent = Interlocked.Read(ref _sent);
+        return new ProgressSnapshot(
+            sent,
+            Interlocked.Read(ref _accepted),
+            _rejected.Values.Sum(),
+            Interlocked.Read(ref _transportErrors),
+            sent - Interlocked.Read(ref _firstResponses));
     }
 
     public Report Build(Guid pollId, RunParameters parameters, TimeSpan sendingTime, LatencySummary latency, JsonElement? result)

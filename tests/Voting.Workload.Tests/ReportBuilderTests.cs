@@ -185,6 +185,23 @@ public sealed class ReportBuilderTests
         }
     }
 
+    [Fact]
+    public void Snapshot_MixedResponses_ReflectsCountersAndInFlight()
+    {
+        var builder = new ReportBuilder();
+        Send(builder, "k1", 201);
+        Send(builder, "k2", 409, "voting_closed");
+        builder.RecordSent();
+        builder.RecordResponse("k3", VoteResponse.TransportError, intentionalReplay: false);
+        builder.RecordSent();
+        builder.RecordResponse("k1", new VoteResponse(200, null), intentionalReplay: true);
+        builder.RecordSent();
+
+        var snapshot = builder.Snapshot();
+
+        Assert.Equal(new ProgressSnapshot(Sent: 5, Accepted: 1, Rejected: 1, TransportErrors: 1, InFlight: 2), snapshot);
+    }
+
     private static void Send(ReportBuilder builder, string key, int status, string? code = null)
     {
         builder.RecordSent();

@@ -45,6 +45,8 @@ public sealed class WorkloadIntegrationTests : IAsyncLifetime
         Assert.InRange(counts.GetProperty("accepted").GetInt64(), 200, 400);
         Assert.True(counts.GetProperty("replayed").GetInt64() > 0, output.ToString());
         Assert.Equal(counts.GetProperty("accepted").GetInt64(), root.GetProperty("result").GetProperty("totalVotes").GetInt64());
+        Assert.Contains("sending 100 votes/s", error.ToString(), StringComparison.Ordinal);
+        Assert.Contains("waiting for the result", error.ToString(), StringComparison.Ordinal);
         Assert.Equal(0, exitCode);
     }
 }
