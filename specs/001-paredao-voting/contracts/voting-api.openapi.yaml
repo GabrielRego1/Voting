@@ -1,0 +1,255 @@
+openapi: 3.1.0
+info:
+  title: Voting API
+  version: 1.0.0
+  description: >
+    Contrato HTTP da votação do paredão (feature 001-paredao-voting).
+    Erros seguem Problem Details (RFC 9457) com o campo estável `code`.
+servers:
+  - url: http://localhost:5080
+paths:
+  /polls:
+    post:
+      operationId: createPoll
+      summary: Cria um paredão com exatamente 3 participantes (FR-001)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreatePollRequest' }
+      responses:
+        '201':
+          description: Paredão criado (estado Created)
+          headers:
+            Location: { schema: { type: string }, description: /polls/{pollId} }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Poll' }
+        '400':
+          description: "code: invalid_participants (quantidade diferente de 3, nome vazio, duplicado ou > 100 caracteres)"
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+
+  /polls/{pollId}:
+    parameters:
+      - $ref: '#/components/parameters/PollId'
+    get:
+      operationId: getPoll
+      summary: Consulta o paredão e seu estado derivado
+      responses:
+        '200':
+          description: Paredão
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Poll' }
+        '404': { $ref: '#/components/responses/PollNotFound' }
+
+  /polls/{pollId}/open:
+    parameters:
+      - $ref: '#/components/parameters/PollId'
+    post:
+      operationId: openPoll
+      summary: Abre a votação por 30 s a partir de agora (FR-002, FR-003, FR-019)
+      responses:
+        '200':
+          description: Votação aberta
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Poll' }
+        '404': { $ref: '#/components/responses/PollNotFound' }
+        '409':
+          description: "code: poll_already_opened | another_poll_open"
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+
+  /polls/{pollId}/votes:
+    parameters:
+      - $ref: '#/components/parameters/PollId'
+    post:
+      operationId: castVote
+      summary: Registra um voto; confirma somente após gravação durável (FR-004..FR-008)
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          description: Chave do cliente, única por paredão. Reenvios com a mesma chave não duplicam o voto.
+          schema: { type: string, pattern: '^[A-Za-z0-9_-]{1,64}$' }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CastVoteRequest' }
+      responses:
+        '201':
+          description: Voto aceito e gravado de forma durável
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/VoteReceipt' }
+        '200':
+          description: Reenvio de uma chave já aceita com o mesmo participante; devolve a confirmação original
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/VoteReceipt' }
+        '400':
+          description: "code: missing_idempotency_key | invalid_idempotency_key"
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '404': { $ref: '#/components/responses/PollNotFound' }
+        '409':
+          description: "code: voting_not_open | voting_closed | idempotency_key_conflict"
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '422':
+          description: "code: invalid_participant"
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+        '503':
+          description: "code: overloaded — fila de gravação cheia; voto NÃO confirmado, reenviar com a mesma chave"
+          headers:
+            Retry-After: { schema: { type: integer }, description: segundos }
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+
+  /polls/{pollId}/result:
+    parameters:
+      - $ref: '#/components/parameters/PollId'
+    get:
+      operationId: getResult
+      summary: Resultado final, disponível após a finalização (FR-010..FR-014)
+      responses:
+        '200':
+          description: Resultado final
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PollResult' }
+        '404': { $ref: '#/components/responses/PollNotFound' }
+        '409':
+          description: "code: result_not_available — votação não iniciada, aberta ou em finalização"
+          content:
+            application/problem+json:
+              schema: { $ref: '#/components/schemas/Problem' }
+
+components:
+  parameters:
+    PollId:
+      name: pollId
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+
+  responses:
+    PollNotFound:
+      description: "code: poll_not_found"
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+
+  schemas:
+    CreatePollRequest:
+      type: object
+      required: [participants]
+      properties:
+        participants:
+          type: array
+          minItems: 3
+          maxItems: 3
+          items: { type: string, minLength: 1, maxLength: 100 }
+      example:
+        participants: [Ana, Bruno, Carla]
+
+    Participant:
+      type: object
+      required: [id, name, position]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        position: { type: integer, minimum: 1, maximum: 3 }
+
+    Poll:
+      type: object
+      required: [id, status, participants, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        status: { type: string, enum: [Created, Open, Closed, Finalized] }
+        participants:
+          type: array
+          items: { $ref: '#/components/schemas/Participant' }
+        createdAt: { type: string, format: date-time }
+        openedAt: { type: [string, 'null'], format: date-time }
+        closesAt: { type: [string, 'null'], format: date-time }
+
+    CastVoteRequest:
+      type: object
+      required: [participantId]
+      properties:
+        participantId: { type: string, format: uuid }
+
+    VoteReceipt:
+      type: object
+      required: [voteId, pollId, participantId, receivedAt]
+      properties:
+        voteId: { type: string, format: uuid }
+        pollId: { type: string, format: uuid }
+        participantId: { type: string, format: uuid }
+        receivedAt: { type: string, format: date-time }
+
+    ParticipantTally:
+      type: object
+      required: [participantId, name, votes, percentage]
+      properties:
+        participantId: { type: string, format: uuid }
+        name: { type: string }
+        votes: { type: integer, format: int64 }
+        percentage:
+          type: number
+          description: Duas casas decimais; soma 100.00 quando totalVotes > 0
+          example: 33.34
+
+    PollResult:
+      type: object
+      required: [pollId, totalVotes, outcome, tallies, finalizedAt]
+      properties:
+        pollId: { type: string, format: uuid }
+        totalVotes: { type: integer, format: int64 }
+        outcome: { type: string, enum: [Eliminated, Tie, NoVotes] }
+        eliminated:
+          oneOf:
+            - $ref: '#/components/schemas/Participant'
+            - type: 'null'
+        tiedParticipants:
+          type: array
+          items: { $ref: '#/components/schemas/Participant' }
+        tallies:
+          type: array
+          items: { $ref: '#/components/schemas/ParticipantTally' }
+        finalizedAt: { type: string, format: date-time }
+
+    Problem:
+      type: object
+      required: [type, title, status, code]
+      properties:
+        type: { type: string }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+        code:
+          type: string
+          enum:
+            - invalid_participants
+            - poll_not_found
+            - poll_already_opened
+            - another_poll_open
+            - missing_idempotency_key
+            - invalid_idempotency_key
+            - voting_not_open
+            - voting_closed
+            - invalid_participant
+            - idempotency_key_conflict
+            - overloaded
+            - result_not_available
