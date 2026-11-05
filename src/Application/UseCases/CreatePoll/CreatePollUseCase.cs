@@ -1,4 +1,5 @@
 using Application.Abstractions.Persistence;
+using Application.Abstractions.UseCases;
 using Application.Dtos;
 using Domain.Common;
 using Domain.Entities;

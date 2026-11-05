@@ -1,4 +1,11 @@
+using Application.Abstractions.UseCases;
+using Application.Dtos;
+using Application.UseCases.CastVote;
+using Application.UseCases.GetPollResult;
 using Application;
+using Domain.Abstractions.Services;
+using Domain.Common;
+using Domain.Entities;
 using Infrastructure;
 using IntegrationTests.Infrastructure.Fixtures;
 using IntegrationTests.WebApi.Fixtures;

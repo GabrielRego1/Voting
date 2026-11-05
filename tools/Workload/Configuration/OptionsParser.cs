@@ -1,4 +1,5 @@
 using System.Globalization;
+using Workload.Abstractions.Configuration;
 
 namespace Workload.Configuration;
 

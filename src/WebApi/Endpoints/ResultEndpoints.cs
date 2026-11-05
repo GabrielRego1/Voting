@@ -1,4 +1,4 @@
-using Application.UseCases.GetPollResult;
+using Application.Abstractions.UseCases;
 using WebApi.Errors;
 
 namespace WebApi.Endpoints;

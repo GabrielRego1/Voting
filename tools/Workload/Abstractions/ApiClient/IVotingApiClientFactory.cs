@@ -1,4 +1,4 @@
-namespace Workload.ApiClient;
+namespace Workload.Abstractions.ApiClient;
 
 /// <summary>
 /// Creates API clients for a run, whose address and connection limit come from the CLI options.

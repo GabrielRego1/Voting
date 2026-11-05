@@ -1,5 +1,6 @@
 using Application.Abstractions.Persistence;
-using Domain.Services;
+using Application.Abstractions.UseCases;
+using Domain.Abstractions.Services;
 
 namespace Application.UseCases.FinalizePollResult;
 

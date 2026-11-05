@@ -1,4 +1,6 @@
-namespace Workload.Configuration;
+using Workload.Configuration;
+
+namespace Workload.Abstractions.Configuration;
 
 /// <summary>
 /// Parses the CLI options of contracts/workload-cli.md.

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using Workload.Abstractions.Metrics;
 using Workload.Reporting;
 
 namespace Workload.Metrics;

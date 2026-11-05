@@ -1,4 +1,4 @@
-namespace Workload;
+namespace Workload.Abstractions;
 
 /// <summary>
 /// Runs the load generator: prepares the poll, sends the load, waits for the result and reports.

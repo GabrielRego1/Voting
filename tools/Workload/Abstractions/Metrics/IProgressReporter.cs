@@ -1,6 +1,6 @@
 using Workload.Reporting;
 
-namespace Workload.Metrics;
+namespace Workload.Abstractions.Metrics;
 
 /// <summary>
 /// Periodically writes the load progress while a run is sending votes.

@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using Workload.Abstractions.ApiClient;
+using Workload.Abstractions.Load;
 using Workload.ApiClient;
 using Workload.Configuration;
 using Workload.Metrics;

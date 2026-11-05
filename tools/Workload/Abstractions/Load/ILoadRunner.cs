@@ -1,9 +1,10 @@
+using Workload.Abstractions.ApiClient;
 using Workload.ApiClient;
 using Workload.Configuration;
 using Workload.Metrics;
 using Workload.Reporting;
 
-namespace Workload.Load;
+namespace Workload.Abstractions.Load;
 
 /// <summary>
 /// Sends the open-model vote load of a run.

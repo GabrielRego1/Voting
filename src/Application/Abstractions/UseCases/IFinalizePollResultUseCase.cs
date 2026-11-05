@@ -1,4 +1,4 @@
-namespace Application.UseCases.FinalizePollResult;
+namespace Application.Abstractions.UseCases;
 
 /// <summary>
 /// Tallies a closed poll once: drains the votes still queued, counts them and stores the result (research R-05).

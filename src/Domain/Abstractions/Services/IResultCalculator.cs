@@ -1,6 +1,6 @@
 using Domain.Entities;
 
-namespace Domain.Services;
+namespace Domain.Abstractions.Services;
 
 /// <summary>
 /// Tallies a poll into its final, immutable result.

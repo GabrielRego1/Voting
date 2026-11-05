@@ -1,6 +1,4 @@
-using Application.UseCases.CreatePoll;
-using Application.UseCases.GetPollDetails;
-using Application.UseCases.OpenPollVoting;
+using Application.Abstractions.UseCases;
 using WebApi.Contracts.Requests;
 using WebApi.Errors;
 

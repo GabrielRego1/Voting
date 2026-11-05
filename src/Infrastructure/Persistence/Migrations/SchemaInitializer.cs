@@ -1,4 +1,11 @@
 using System.Reflection;
+using Application.Abstractions.UseCases;
+using Application.Dtos;
+using Application.UseCases.CastVote;
+using Application.UseCases.GetPollResult;
+using Domain.Abstractions.Services;
+using Domain.Common;
+using Domain.Entities;
 using Infrastructure.BackgroundServices;
 using Infrastructure.Options;
 using Infrastructure.Persistence.Repositories;

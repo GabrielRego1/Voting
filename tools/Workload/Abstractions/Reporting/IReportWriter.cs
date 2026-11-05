@@ -1,6 +1,7 @@
 using Workload.Configuration;
+using Workload.Reporting;
 
-namespace Workload.Reporting;
+namespace Workload.Abstractions.Reporting;
 
 /// <summary>
 /// Writes the run report in the requested format.

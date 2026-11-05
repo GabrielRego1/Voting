@@ -1,6 +1,7 @@
+using Application.UseCases.GetPollResult;
 using Domain.Common;
 
-namespace Application.UseCases.GetPollResult;
+namespace Application.Abstractions.UseCases;
 
 public interface IGetPollResultUseCase
 {

@@ -1,4 +1,4 @@
-using Application.UseCases.CastVote;
+using Application.Abstractions.UseCases;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Contracts.Requests;
 using WebApi.Errors;

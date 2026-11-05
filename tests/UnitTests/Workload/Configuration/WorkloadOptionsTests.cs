@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Workload;
+using Workload.Abstractions;
 using Workload.Configuration;
 
 namespace UnitTests.Workload.Configuration;

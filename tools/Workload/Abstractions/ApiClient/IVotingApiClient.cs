@@ -1,7 +1,8 @@
 using System.Text.Json;
+using Workload.ApiClient;
 using Workload.Metrics;
 
-namespace Workload.ApiClient;
+namespace Workload.Abstractions.ApiClient;
 
 /// <summary>
 /// Client of the public voting API (contracts/voting-api.openapi.yaml).

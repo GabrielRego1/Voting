@@ -1,7 +1,7 @@
 using Application.Dtos;
 using Domain.Common;
 
-namespace Application.UseCases.CreatePoll;
+namespace Application.Abstractions.UseCases;
 
 public interface ICreatePollUseCase
 {

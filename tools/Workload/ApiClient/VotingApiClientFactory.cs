@@ -1,3 +1,5 @@
+using Workload.Abstractions.ApiClient;
+
 namespace Workload.ApiClient;
 
 /// <summary>

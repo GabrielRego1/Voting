@@ -1,3 +1,4 @@
+using Application.Abstractions.UseCases;
 using Application.UseCases.CastVote;
 using Application.UseCases.CreatePoll;
 using Application.UseCases.FinalizePollResult;

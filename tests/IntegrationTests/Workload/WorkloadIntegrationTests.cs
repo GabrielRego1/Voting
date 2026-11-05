@@ -3,6 +3,7 @@ using System.Text.Json;
 using IntegrationTests.WebApi.Fixtures;
 using Microsoft.Extensions.DependencyInjection;
 using Workload;
+using Workload.Abstractions;
 
 namespace IntegrationTests.Workload;
 

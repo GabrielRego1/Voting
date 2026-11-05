@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text.Json;
+using Workload.Abstractions.Reporting;
 using Workload.Configuration;
 
 namespace Workload.Reporting;

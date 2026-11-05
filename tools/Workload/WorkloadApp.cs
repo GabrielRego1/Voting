@@ -1,9 +1,13 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json;
+using Workload.Abstractions;
+using Workload.Abstractions.ApiClient;
+using Workload.Abstractions.Configuration;
+using Workload.Abstractions.Load;
+using Workload.Abstractions.Metrics;
+using Workload.Abstractions.Reporting;
 using Workload.ApiClient;
-using Workload.Configuration;
-using Workload.Load;
 using Workload.Metrics;
 using Workload.Reporting;
 

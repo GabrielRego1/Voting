@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Workload.Abstractions;
 
 namespace Workload;
 

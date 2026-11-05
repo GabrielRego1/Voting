@@ -1,5 +1,5 @@
 using Application.Abstractions.Persistence;
-using Application.UseCases.FinalizePollResult;
+using Application.Abstractions.UseCases;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 

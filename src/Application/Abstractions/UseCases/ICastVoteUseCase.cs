@@ -1,6 +1,7 @@
+using Application.UseCases.CastVote;
 using Domain.Common;
 
-namespace Application.UseCases.CastVote;
+namespace Application.Abstractions.UseCases;
 
 /// <summary>
 /// Validates and records a vote. Multiple votes per voter are allowed and no per-origin limit exists (FR-006, FR-018).
