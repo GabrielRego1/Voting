@@ -1,12 +1,12 @@
 using System.Diagnostics;
 using System.Threading.Channels;
+using Application.Abstractions;
+using Application.Votes;
+using Domain.Entities;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
-using Application.Abstractions;
-using Application.Votes;
-using Domain.Votes;
 
 namespace Infrastructure.Votes;
 

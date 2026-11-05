@@ -1,7 +1,7 @@
-using Microsoft.Extensions.DependencyInjection;
 using Application.Polls;
 using Application.Results;
 using Application.Votes;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
 

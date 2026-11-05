@@ -1,6 +1,6 @@
+using Application.Votes;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Errors;
-using Application.Votes;
 
 namespace WebApi.Endpoints;
 

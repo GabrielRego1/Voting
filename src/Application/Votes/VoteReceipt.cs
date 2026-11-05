@@ -1,4 +1,4 @@
-using Domain.Votes;
+using Domain.Entities;
 
 namespace Application.Votes;
 

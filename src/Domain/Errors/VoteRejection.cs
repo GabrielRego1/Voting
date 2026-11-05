@@ -1,6 +1,6 @@
 using Domain.Common;
 
-namespace Domain.Polls;
+namespace Domain.Errors;
 
 /// <summary>
 /// Reasons why the poll refuses a vote.

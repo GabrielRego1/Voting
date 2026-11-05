@@ -1,4 +1,7 @@
-namespace Domain.Results;
+using Domain.Enums;
+using Domain.ValueObjects;
+
+namespace Domain.Entities;
 
 /// <summary>
 /// The final, immutable result of a poll, written once at finalization.

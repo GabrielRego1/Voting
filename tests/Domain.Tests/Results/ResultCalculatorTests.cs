@@ -1,5 +1,6 @@
-using Domain.Polls;
-using Domain.Results;
+using Domain.Entities;
+using Domain.Enums;
+using Domain.Services;
 
 namespace Domain.Tests.Results;
 

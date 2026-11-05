@@ -1,4 +1,4 @@
-namespace Domain.Polls;
+namespace Domain.Enums;
 
 public enum PollStatus
 {

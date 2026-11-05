@@ -1,15 +1,14 @@
+using Application;
+using Application.Abstractions;
+using Domain.Entities;
+using Domain.Enums;
+using Infrastructure.Persistence;
+using Infrastructure.Tests.Fixtures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Time.Testing;
 using Npgsql;
-using Application;
-using Application.Abstractions;
-using Domain.Polls;
-using Domain.Results;
-using Domain.Votes;
-using Infrastructure.Persistence;
-using Infrastructure.Tests.Fixtures;
 
 namespace Infrastructure.Tests.Hosting;
 

@@ -1,5 +1,5 @@
 using Application.Abstractions;
-using Domain.Results;
+using Domain.Services;
 
 namespace Application.Results;
 

@@ -1,4 +1,4 @@
-namespace Domain.Results;
+namespace Domain.ValueObjects;
 
 /// <summary>
 /// Votes of one participant; <c>Percentage</c> has exactly two decimal places.

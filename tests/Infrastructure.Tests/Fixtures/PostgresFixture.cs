@@ -1,6 +1,6 @@
+using Infrastructure.Persistence;
 using Npgsql;
 using Testcontainers.PostgreSql;
-using Infrastructure.Persistence;
 
 namespace Infrastructure.Tests.Fixtures;
 

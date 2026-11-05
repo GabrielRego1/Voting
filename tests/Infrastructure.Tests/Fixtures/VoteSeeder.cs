@@ -1,5 +1,5 @@
+using Domain.Entities;
 using Npgsql;
-using Domain.Polls;
 
 namespace Infrastructure.Tests.Fixtures;
 

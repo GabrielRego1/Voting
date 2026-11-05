@@ -1,6 +1,6 @@
-using Npgsql;
-using Domain.Polls;
+using Domain.Entities;
 using Infrastructure.Persistence;
+using Npgsql;
 
 namespace Infrastructure.Tests.Fixtures;
 

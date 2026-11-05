@@ -1,10 +1,10 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Npgsql;
 using Application.Abstractions;
 using Infrastructure.Hosting;
 using Infrastructure.Persistence;
 using Infrastructure.Votes;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 
 namespace Infrastructure;
 

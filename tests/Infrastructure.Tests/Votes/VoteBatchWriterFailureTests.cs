@@ -1,8 +1,8 @@
-using Npgsql;
-using Testcontainers.PostgreSql;
 using Infrastructure.Persistence;
 using Infrastructure.Tests.Fixtures;
 using Infrastructure.Votes;
+using Npgsql;
+using Testcontainers.PostgreSql;
 
 namespace Infrastructure.Tests.Votes;
 

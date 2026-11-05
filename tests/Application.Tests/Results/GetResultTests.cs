@@ -1,8 +1,10 @@
-using Microsoft.Extensions.Time.Testing;
 using Application.Polls;
 using Application.Results;
 using Application.Tests.Fakes;
-using Domain.Results;
+using Domain.Entities;
+using Domain.Enums;
+using Domain.ValueObjects;
+using Microsoft.Extensions.Time.Testing;
 
 namespace Application.Tests.Results;
 

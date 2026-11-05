@@ -1,7 +1,7 @@
-using Microsoft.Extensions.Time.Testing;
 using Application.Polls;
 using Application.Tests.Fakes;
-using Domain.Polls;
+using Domain.Enums;
+using Microsoft.Extensions.Time.Testing;
 
 namespace Application.Tests.Polls;
 

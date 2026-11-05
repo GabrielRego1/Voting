@@ -1,7 +1,7 @@
-using Microsoft.Extensions.Time.Testing;
 using Application.Polls;
 using Application.Tests.Fakes;
 using Application.Votes;
+using Microsoft.Extensions.Time.Testing;
 
 namespace Application.Tests.Votes;
 

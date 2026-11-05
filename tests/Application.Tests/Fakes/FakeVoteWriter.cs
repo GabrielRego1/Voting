@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using Application.Abstractions;
 using Application.Votes;
-using Domain.Votes;
+using Domain.Entities;
 
 namespace Application.Tests.Fakes;
 

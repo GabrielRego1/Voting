@@ -1,6 +1,6 @@
 using Application.Abstractions;
 using Domain.Common;
-using Domain.Polls;
+using Domain.Entities;
 
 namespace Application.Polls;
 

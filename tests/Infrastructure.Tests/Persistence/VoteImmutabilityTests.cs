@@ -1,5 +1,5 @@
-using Npgsql;
 using Infrastructure.Tests.Fixtures;
+using Npgsql;
 
 namespace Infrastructure.Tests.Persistence;
 

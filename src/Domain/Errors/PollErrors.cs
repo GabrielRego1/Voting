@@ -1,6 +1,6 @@
 using Domain.Common;
 
-namespace Domain.Polls;
+namespace Domain.Errors;
 
 public static class PollErrors
 {

@@ -1,8 +1,8 @@
-using Microsoft.Extensions.Time.Testing;
 using Application.Abstractions;
-using Domain.Polls;
+using Domain.Entities;
 using Infrastructure.Persistence;
 using Infrastructure.Tests.Fixtures;
+using Microsoft.Extensions.Time.Testing;
 
 namespace Infrastructure.Tests.Persistence;
 

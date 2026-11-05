@@ -1,4 +1,4 @@
-using Domain.Polls;
+using Domain.Entities;
 
 namespace Application.Abstractions;
 

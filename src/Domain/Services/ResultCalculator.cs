@@ -1,7 +1,9 @@
 using Domain.Common;
-using Domain.Polls;
+using Domain.Entities;
+using Domain.Enums;
+using Domain.ValueObjects;
 
-namespace Domain.Results;
+namespace Domain.Services;
 
 /// <summary>
 /// Tallies a poll. Percentages use the largest remainder method in hundredths of a percent, so they

@@ -1,6 +1,6 @@
 using System.Collections.Concurrent;
 using Application.Abstractions;
-using Domain.Results;
+using Domain.Entities;
 
 namespace Application.Tests.Fakes;
 

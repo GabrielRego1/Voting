@@ -1,3 +1,10 @@
+using Application;
+using Application.Abstractions;
+using Application.Votes;
+using Domain.Entities;
+using Infrastructure.Persistence;
+using Infrastructure.Tests.Fixtures;
+using Infrastructure.Votes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -5,14 +12,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Time.Testing;
 using Npgsql;
-using Application;
-using Application.Abstractions;
-using Application.Votes;
-using Domain.Polls;
-using Domain.Votes;
-using Infrastructure.Persistence;
-using Infrastructure.Tests.Fixtures;
-using Infrastructure.Votes;
 
 namespace Infrastructure.Tests.Votes;
 

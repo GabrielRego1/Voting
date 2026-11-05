@@ -1,6 +1,6 @@
 using Application.Polls;
-using Domain.Polls;
-using Domain.Results;
+using Domain.Entities;
+using Domain.Enums;
 
 namespace Application.Results;
 

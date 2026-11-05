@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
-using WebApi.Endpoints;
 using Application;
 using Infrastructure;
+using WebApi.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 

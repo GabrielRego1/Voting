@@ -1,4 +1,4 @@
-namespace Domain.Results;
+namespace Domain.Enums;
 
 public enum Outcome
 {

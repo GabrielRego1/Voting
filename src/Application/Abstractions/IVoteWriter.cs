@@ -1,5 +1,5 @@
 using Application.Votes;
-using Domain.Votes;
+using Domain.Entities;
 
 namespace Application.Abstractions;
 

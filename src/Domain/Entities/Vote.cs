@@ -1,6 +1,6 @@
 using Domain.Common;
 
-namespace Domain.Votes;
+namespace Domain.Entities;
 
 /// <summary>
 /// An immutable, append-only vote.

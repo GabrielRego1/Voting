@@ -1,7 +1,7 @@
 using Application.Abstractions;
 using Application.Common;
 using Domain.Common;
-using Domain.Votes;
+using Domain.Entities;
 
 namespace Application.Votes;
 

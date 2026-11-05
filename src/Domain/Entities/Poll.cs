@@ -1,6 +1,9 @@
 using Domain.Common;
+using Domain.Enums;
+using Domain.Errors;
+using Domain.ValueObjects;
 
-namespace Domain.Polls;
+namespace Domain.Entities;
 
 /// <summary>
 /// The "paredão": exactly three participants and a voting window of <see cref="Duration"/>.

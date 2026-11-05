@@ -1,8 +1,10 @@
 using System.Text.Json;
+using Application.Abstractions;
+using Domain.Entities;
+using Domain.Enums;
+using Domain.ValueObjects;
 using Npgsql;
 using NpgsqlTypes;
-using Application.Abstractions;
-using Domain.Results;
 
 namespace Infrastructure.Persistence;
 

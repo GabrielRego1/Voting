@@ -1,6 +1,6 @@
 using Domain.Common;
 
-namespace Domain.Polls;
+namespace Domain.ValueObjects;
 
 /// <summary>
 /// Whether a vote is accepted by the poll, or the <see cref="Rejection"/> reason otherwise.

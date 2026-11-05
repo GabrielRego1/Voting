@@ -1,3 +1,3 @@
-namespace Domain.Polls;
+namespace Domain.ValueObjects;
 
 public sealed record Participant(Guid Id, string Name, int Position);

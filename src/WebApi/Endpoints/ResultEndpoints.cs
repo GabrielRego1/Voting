@@ -1,5 +1,5 @@
-using WebApi.Errors;
 using Application.Results;
+using WebApi.Errors;
 
 namespace WebApi.Endpoints;
 
