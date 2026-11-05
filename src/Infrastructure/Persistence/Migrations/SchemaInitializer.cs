@@ -1,18 +1,22 @@
 using System.Reflection;
+using Infrastructure.BackgroundServices;
+using Infrastructure.Configuration;
+using Infrastructure.Persistence.Repositories;
+using Infrastructure.Persistence.Writers;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
 
-namespace Infrastructure.Persistence;
+namespace Infrastructure.Persistence.Migrations;
 
 /// <summary>
-/// Applies the embedded <c>Sql/NNN_*.sql</c> scripts, in order, when the host starts.
+/// Applies the embedded <c>NNN_*.sql</c> scripts, in order, when the host starts.
 /// </summary>
 public sealed class SchemaInitializer(NpgsqlDataSource dataSource) : IHostedService
 {
     // Arbitrary key that serializes concurrent schema initializations.
     private const long SchemaLockKey = 0x766F74696E67;
 
-    private const string ScriptPrefix = "Infrastructure.Persistence.Sql.";
+    private const string ScriptPrefix = "Infrastructure.Persistence.Migrations.";
 
     public Task StartAsync(CancellationToken cancellationToken)
     {

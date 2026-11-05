@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 using Application.Abstractions.Persistence;
 using Domain.Entities;
 
-namespace Infrastructure.Persistence;
+namespace Infrastructure.Persistence.Repositories;
 
 /// <summary>
 /// Caches opened polls so voting does not read the database on every vote.

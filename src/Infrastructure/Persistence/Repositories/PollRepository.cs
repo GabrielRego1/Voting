@@ -3,7 +3,7 @@ using Domain.Entities;
 using Domain.ValueObjects;
 using Npgsql;
 
-namespace Infrastructure.Persistence;
+namespace Infrastructure.Persistence.Repositories;
 
 public sealed class PollRepository(NpgsqlDataSource dataSource) : IPollRepository
 {

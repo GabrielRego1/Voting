@@ -1,5 +1,5 @@
 using Domain.Entities;
-using Infrastructure.Persistence;
+using Infrastructure.Persistence.Repositories;
 using Npgsql;
 
 namespace Infrastructure.Tests.Fixtures;

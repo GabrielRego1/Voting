@@ -1,6 +1,6 @@
-using Infrastructure.Persistence;
+using Infrastructure.Configuration;
+using Infrastructure.Persistence.Migrations;
 using Infrastructure.Tests.Fixtures;
-using Infrastructure.Votes;
 using Npgsql;
 using Testcontainers.PostgreSql;
 

@@ -3,12 +3,13 @@ using System.Threading.Channels;
 using Application.Abstractions.Persistence;
 using Application.Dtos;
 using Domain.Entities;
+using Infrastructure.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
 
-namespace Infrastructure.Votes;
+namespace Infrastructure.Persistence.Writers;
 
 /// <summary>
 /// Group-commit vote writer: votes are queued in a bounded channel and committed in batches, one

@@ -1,7 +1,7 @@
 using Application.Abstractions.Persistence;
 using Npgsql;
 
-namespace Infrastructure.Persistence;
+namespace Infrastructure.Persistence.Repositories;
 
 public sealed class VoteTally(NpgsqlDataSource dataSource) : IVoteTally
 {

@@ -2,7 +2,7 @@ using Application;
 using Application.Abstractions.Persistence;
 using Domain.Entities;
 using Domain.Enums;
-using Infrastructure.Persistence;
+using Infrastructure.Persistence.Migrations;
 using Infrastructure.Tests.Fixtures;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,4 +1,4 @@
-using Infrastructure.Persistence;
+using Infrastructure.Persistence.Migrations;
 using Npgsql;
 using Testcontainers.PostgreSql;
 

@@ -1,5 +1,6 @@
 using Domain.Entities;
-using Infrastructure.Persistence;
+using Infrastructure.Persistence.Migrations;
+using Infrastructure.Persistence.Repositories;
 using Infrastructure.Tests.Fixtures;
 using Npgsql;
 

@@ -1,7 +1,9 @@
 using Application.Abstractions.Persistence;
-using Infrastructure.Hosting;
-using Infrastructure.Persistence;
-using Infrastructure.Votes;
+using Infrastructure.BackgroundServices;
+using Infrastructure.Configuration;
+using Infrastructure.Persistence.Migrations;
+using Infrastructure.Persistence.Repositories;
+using Infrastructure.Persistence.Writers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;

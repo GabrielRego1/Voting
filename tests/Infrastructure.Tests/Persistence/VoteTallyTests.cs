@@ -1,4 +1,4 @@
-using Infrastructure.Persistence;
+using Infrastructure.Persistence.Repositories;
 using Infrastructure.Tests.Fixtures;
 
 namespace Infrastructure.Tests.Persistence;

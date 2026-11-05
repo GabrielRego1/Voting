@@ -3,7 +3,7 @@ using Application.UseCases.FinalizePollResult;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Infrastructure.Hosting;
+namespace Infrastructure.BackgroundServices;
 
 /// <summary>
 /// Finalizes polls whose window has closed. Runs once on startup (recovering polls that closed while the

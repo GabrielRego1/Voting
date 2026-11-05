@@ -6,7 +6,7 @@ using Domain.ValueObjects;
 using Npgsql;
 using NpgsqlTypes;
 
-namespace Infrastructure.Persistence;
+namespace Infrastructure.Persistence.Repositories;
 
 /// <summary>
 /// Stores each poll result exactly once, marking the poll as finalized in the same transaction.
