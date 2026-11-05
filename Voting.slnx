@@ -9,10 +9,7 @@
     <Project Path="tools/Workload/Workload.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/Domain.Tests/Domain.Tests.csproj" />
-    <Project Path="tests/Application.Tests/Application.Tests.csproj" />
-    <Project Path="tests/Infrastructure.Tests/Infrastructure.Tests.csproj" />
-    <Project Path="tests/WebApi.Tests/WebApi.Tests.csproj" />
-    <Project Path="tests/Workload.Tests/Workload.Tests.csproj" />
+    <Project Path="tests/UnitTests/UnitTests.csproj" />
+    <Project Path="tests/IntegrationTests/IntegrationTests.csproj" />
   </Folder>
 </Solution>

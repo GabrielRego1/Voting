@@ -20,10 +20,10 @@ API_BIN  := src/WebApi/bin/$(CONFIGURATION)/net10.0
 SHELL := /bin/bash
 .SHELLFLAGS := -eu -o pipefail -c
 
-.PHONY: help setup test run load stress down
+.PHONY: help setup test test-unit test-integration run load stress down
 
 help: ## List available targets
-	@grep -E '^[a-z]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-8s %s\n", $$1, $$2}'
+	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-17s %s\n", $$1, $$2}'
 
 setup: ## Check prerequisites, start PostgreSQL and build the solution
 	@command -v dotnet >/dev/null || { echo "error: .NET SDK 10 not found"; exit 1; }
@@ -35,6 +35,12 @@ setup: ## Check prerequisites, start PostgreSQL and build the solution
 
 test: ## Run unit and integration tests (Testcontainers starts its own PostgreSQL)
 	dotnet test --solution $(SOLUTION) -c $(CONFIGURATION)
+
+test-unit: ## Run only the unit tests (no Docker needed)
+	dotnet test --project tests/UnitTests -c $(CONFIGURATION)
+
+test-integration: ## Run only the integration tests (Testcontainers starts its own PostgreSQL)
+	dotnet test --project tests/IntegrationTests -c $(CONFIGURATION)
 
 run: setup ## Start the API in the foreground for manual testing
 	cd $(API_BIN)
