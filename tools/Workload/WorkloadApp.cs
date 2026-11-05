@@ -20,7 +20,7 @@ internal sealed class WorkloadApp(
     IProgressReporter progressReporter,
     IReportWriter reportWriter) : IWorkloadApp
 {
-    public const int UsageOrApiError = 2;
+    private const int UsageOrApiError = 2;
 
     public async Task<int> RunAsync(
         string[] args,

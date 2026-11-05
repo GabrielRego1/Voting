@@ -11,8 +11,8 @@ namespace Domain.Entities;
 /// </summary>
 public sealed class Poll
 {
-    public const int ParticipantCount = 3;
-    public const int MaxNameLength = 100;
+    private const int ParticipantCount = 3;
+    private const int MaxNameLength = 100;
 
     public static readonly TimeSpan Duration = TimeSpan.FromSeconds(30);
 

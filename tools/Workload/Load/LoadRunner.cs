@@ -12,7 +12,7 @@ namespace Workload.Load;
 /// </summary>
 internal sealed class LoadRunner : ILoadRunner
 {
-    public static readonly TimeSpan Tick = TimeSpan.FromMilliseconds(10);
+    private static readonly TimeSpan Tick = TimeSpan.FromMilliseconds(10);
 
     /// <summary>
     /// Sends the load and waits for every request to finish. Returns the time spent sending.

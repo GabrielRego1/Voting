@@ -12,7 +12,7 @@ namespace Infrastructure;
 
 public static class DependencyInjection
 {
-    public const string ConnectionStringName = "Voting";
+    private const string ConnectionStringName = "Voting";
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) => services
         .AddSingleton(_ => NpgsqlDataSource.Create(

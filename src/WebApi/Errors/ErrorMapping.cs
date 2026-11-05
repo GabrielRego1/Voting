@@ -8,7 +8,7 @@ namespace WebApi.Errors;
 /// </summary>
 public static class ErrorMapping
 {
-    public const int RetryAfterSeconds = 1;
+    private const int RetryAfterSeconds = 1;
 
     private static readonly Dictionary<string, int> StatusByCode = new(StringComparer.Ordinal)
     {
@@ -26,7 +26,7 @@ public static class ErrorMapping
         ["overloaded"] = StatusCodes.Status503ServiceUnavailable,
     };
 
-    public static int StatusCodeFor(string code)
+    private static int StatusCodeFor(string code)
     {
         return StatusByCode.TryGetValue(code, out var status) ? status : StatusCodes.Status500InternalServerError;
     }

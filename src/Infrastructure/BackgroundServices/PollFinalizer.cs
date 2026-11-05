@@ -15,7 +15,7 @@ public sealed partial class PollFinalizer(
     TimeProvider time,
     ILogger<PollFinalizer> logger) : BackgroundService
 {
-    public static readonly TimeSpan Interval = TimeSpan.FromMilliseconds(250);
+    private static readonly TimeSpan Interval = TimeSpan.FromMilliseconds(250);
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

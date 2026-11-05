@@ -7,7 +7,7 @@ namespace WebApi.Endpoints;
 
 public static class VoteEndpoints
 {
-    public const string IdempotencyKeyHeader = "Idempotency-Key";
+    private const string IdempotencyKeyHeader = "Idempotency-Key";
 
     public static IEndpointRouteBuilder MapVoteEndpoints(this IEndpointRouteBuilder app)
     {

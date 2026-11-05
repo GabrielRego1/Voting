@@ -10,7 +10,7 @@ namespace Application.UseCases.CastVote;
 /// </summary>
 public sealed class CastVoteUseCase(IPollRepository polls, IVoteWriter writer, TimeProvider time) : ICastVoteUseCase
 {
-    public const int MaxIdempotencyKeyLength = 64;
+    private const int MaxIdempotencyKeyLength = 64;
 
     public async Task<Result<CastVoteResult>> ExecuteAsync(
         Guid pollId,

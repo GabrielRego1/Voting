@@ -11,7 +11,7 @@ namespace Workload.Reporting;
 /// </summary>
 internal sealed class ReportBuilder
 {
-    public const double P95TargetMs = 200;
+    private const double P95TargetMs = 200;
 
     private readonly ConcurrentDictionary<string, byte> _confirmedKeys = new(StringComparer.Ordinal);
     private readonly ConcurrentDictionary<string, long> _rejected = new(StringComparer.Ordinal);

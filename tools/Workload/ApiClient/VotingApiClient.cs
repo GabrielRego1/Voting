@@ -13,13 +13,13 @@ namespace Workload.ApiClient;
 internal sealed class VotingApiClient(HttpClient http) : IVotingApiClient
 {
     /// <summary>Total attempts per vote, including the first one.</summary>
-    public const int MaxAttempts = 3;
+    private const int MaxAttempts = 3;
 
     /// <summary>
     /// Wait before the second attempt, doubled for the third (1 s, then 2 s). It honors <c>Retry-After: 1</c> and
     /// outlasts a quick API restart, so a vote committed just before a crash is confirmed by its retry.
     /// </summary>
-    public static readonly TimeSpan RetryBaseDelay = TimeSpan.FromSeconds(1);
+    private static readonly TimeSpan RetryBaseDelay = TimeSpan.FromSeconds(1);
 
     public HttpClient Http => http;
 
