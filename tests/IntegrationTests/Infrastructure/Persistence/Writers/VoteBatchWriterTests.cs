@@ -12,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Time.Testing;
 using Npgsql;
 
@@ -151,6 +150,7 @@ public sealed class VoteBatchWriterTests(PostgresFixture postgres)
             .Build();
         await using var provider = new ServiceCollection()
             .AddLogging()
+            .AddSingleton<IConfiguration>(configuration)
             .AddSingleton<TimeProvider>(new FakeTimeProvider(PollSeeder.OpenedAt))
             .AddDomain()
             .AddApplication()
@@ -205,7 +205,7 @@ public sealed class VoteBatchWriterTests(PostgresFixture postgres)
 
     internal static VoteBatchWriter CreateWriter(NpgsqlDataSource dataSource, VoteWriterOptions? options = null)
     {
-        return new VoteBatchWriter(dataSource, Options.Create(options ?? new VoteWriterOptions()), NullLogger<VoteBatchWriter>.Instance);
+        return new VoteBatchWriter(dataSource, options ?? new VoteWriterOptions(), NullLogger<VoteBatchWriter>.Instance);
     }
 
     private static async Task<RunningWriter> StartWriterAsync(NpgsqlDataSource dataSource, VoteWriterOptions? options = null)

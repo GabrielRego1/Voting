@@ -6,7 +6,6 @@ using Domain.Entities;
 using Infrastructure.Options;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Npgsql;
 
 namespace Infrastructure.Persistence.Writers;
@@ -18,7 +17,7 @@ namespace Infrastructure.Persistence.Writers;
 /// </summary>
 public sealed partial class VoteBatchWriter(
     NpgsqlDataSource dataSource,
-    IOptions<VoteWriterOptions> options,
+    VoteWriterOptions options,
     ILogger<VoteBatchWriter> logger) : BackgroundService, IVoteWriter
 {
     private const string InsertSql = """
@@ -35,10 +34,8 @@ public sealed partial class VoteBatchWriter(
           ON v.poll_id = k.poll_id AND v.idempotency_key = k.idempotency_key
         """;
 
-    private readonly VoteWriterOptions _options = options.Value;
-
     private readonly Channel<QueueItem> _channel = Channel.CreateBounded<QueueItem>(
-        new BoundedChannelOptions(options.Value.Capacity)
+        new BoundedChannelOptions(options.Capacity)
         {
             SingleReader = true,
             FullMode = BoundedChannelFullMode.Wait,
@@ -80,7 +77,7 @@ public sealed partial class VoteBatchWriter(
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var reader = _channel.Reader;
-        var batch = new List<PendingVote>(_options.MaxBatchSize);
+        var batch = new List<PendingVote>(options.MaxBatchSize);
         var markers = new List<FlushMarker>();
 
         // Not tied to stoppingToken: the loop ends when StopAsync completes the channel and the queue is drained.
@@ -105,7 +102,7 @@ public sealed partial class VoteBatchWriter(
             return;
         }
 
-        var remaining = _options.MaxBatchDelay - Stopwatch.GetElapsedTime(batch[0].EnqueuedAt);
+        var remaining = options.MaxBatchDelay - Stopwatch.GetElapsedTime(batch[0].EnqueuedAt);
         if (remaining > TimeSpan.Zero)
         {
             await Task.Delay(remaining, TimeProvider.System);
@@ -119,7 +116,7 @@ public sealed partial class VoteBatchWriter(
     /// </summary>
     private bool Drain(ChannelReader<QueueItem> reader, List<PendingVote> batch, List<FlushMarker> markers)
     {
-        while (batch.Count < _options.MaxBatchSize && reader.TryRead(out var item))
+        while (batch.Count < options.MaxBatchSize && reader.TryRead(out var item))
         {
             if (item is FlushMarker marker)
             {
@@ -130,7 +127,7 @@ public sealed partial class VoteBatchWriter(
             batch.Add((PendingVote)item);
         }
 
-        return batch.Count < _options.MaxBatchSize;
+        return batch.Count < options.MaxBatchSize;
     }
 
     private async Task WriteBatchAsync(List<PendingVote> batch)

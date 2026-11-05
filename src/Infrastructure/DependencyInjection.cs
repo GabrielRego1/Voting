@@ -1,4 +1,5 @@
 using Application.Abstractions.Persistence;
+using Application.Extensions;
 using Infrastructure.BackgroundServices;
 using Infrastructure.Options;
 using Infrastructure.Persistence.Migrations;
@@ -24,7 +25,7 @@ public static class DependencyInjection
         .AddSingleton<IPollRepository>(sp => new CachedPollRepository(
             sp.GetRequiredService<PollRepository>(),
             sp.GetRequiredService<TimeProvider>()))
-        .Configure<VoteWriterOptions>(configuration.GetSection(VoteWriterOptions.SectionName))
+        .ConfigureOptions<VoteWriterOptions>(VoteWriterOptions.ConfigurationPath)
         .AddSingleton<VoteBatchWriter>()
         .AddSingleton<IVoteWriter>(sp => sp.GetRequiredService<VoteBatchWriter>())
         .AddHostedService(sp => sp.GetRequiredService<VoteBatchWriter>())

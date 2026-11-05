@@ -86,6 +86,7 @@ public sealed class PollFinalizerTests(PostgresFixture postgres)
             .Build();
         var provider = new ServiceCollection()
             .AddLogging()
+            .AddSingleton<IConfiguration>(configuration)
             .AddSingleton(time)
             .AddDomain()
             .AddApplication()

@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Infrastructure.Options;
 
 /// <summary>
@@ -5,14 +7,17 @@ namespace Infrastructure.Options;
 /// </summary>
 public sealed class VoteWriterOptions
 {
-    public const string SectionName = "VoteWriter";
+    public const string ConfigurationPath = "VoteWriter";
 
     /// <summary>Maximum number of votes committed in a single transaction.</summary>
-    public int MaxBatchSize { get; set; } = 1000;
+    [Range(1, int.MaxValue)]
+    public int MaxBatchSize { get; init; } = 1000;
 
     /// <summary>Maximum real time the oldest queued vote waits for its batch to fill.</summary>
-    public TimeSpan MaxBatchDelay { get; set; } = TimeSpan.FromMilliseconds(5);
+    [Range(typeof(TimeSpan), "00:00:00.001", "00:01:00")]
+    public TimeSpan MaxBatchDelay { get; init; } = TimeSpan.FromMilliseconds(5);
 
     /// <summary>Maximum number of queued votes; beyond it votes are refused as overloaded.</summary>
-    public int Capacity { get; set; } = 50000;
+    [Range(1, int.MaxValue)]
+    public int Capacity { get; init; } = 50000;
 }
