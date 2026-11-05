@@ -183,6 +183,9 @@ dotnet_naming_rule.parameters_and_locals_should_be_camel_case.severity = suggest
 # Usings and namespaces
 csharp_using_directive_placement = outside_namespace:warning
 csharp_style_namespace_declarations = file_scoped:warning
+# IDE0130: namespace must match the folder structure
+dotnet_style_namespace_match_folder = true
+dotnet_diagnostic.IDE0130.severity = warning
 
 # var: always
 csharp_style_var_for_built_in_types = true:warning
