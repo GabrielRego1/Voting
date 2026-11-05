@@ -11,7 +11,9 @@ concorrência, sem compromisso com produção.
 - A solução DEVE ser organizada em camadas: `Domain`, `Application`,
   `Infrastructure` e `WebApi`.
 - Dependências apontam SEMPRE para dentro: Domain não referencia nenhuma outra camada
-  nem pacotes de infraestrutura (EF Core, ASP.NET, brokers).
+  nem pacotes NuGet de infraestrutura (EF Core, drivers de banco, brokers). A
+  `FrameworkReference` ao `Microsoft.AspNetCore.App` (Princípio IV) é permitida, mas o
+  código do Domain NÃO usa tipos de HTTP/ASP.NET.
 - Regras de negócio (abertura/encerramento de votação, validação de participante,
   apuração) DEVEM viver em Domain/Application, nunca em controllers ou repositórios.
 - Infraestrutura é acessada via interfaces declaradas em Application.
@@ -66,6 +68,14 @@ na contagem correta, e não na unicidade do eleitor.
   `Configure<TOptions>(section)` em vez de `AddOptions<TOptions>().Bind(section)`).
   Métodos e lambdas cujo corpo é só essa cadeia usam expression body (`=>`). Atribuições
   sucessivas de propriedades de um objeto recém-criado usam object initializer.
+- **Configuração de build centralizada**: `TargetFramework` e demais propriedades comuns
+  (`Nullable`, `OutputType`/`IsPackable` dos testes etc.) são definidos SOMENTE em
+  `Directory.Build.props` (raiz e `tests/`); os `.csproj` NÃO os declaram. As versões de
+  pacotes ficam SOMENTE em `Directory.Packages.props` (Central Package Management). A camada
+  mais interna (`Domain`), e todo projeto sem `ProjectReference` (ex.: `tools/Workload`),
+  declara `<FrameworkReference Include="Microsoft.AspNetCore.App" />`, que as outras camadas
+  herdam por transitividade. Pacotes `Microsoft.Extensions.*` que fazem parte do shared
+  framework NÃO são adicionados como `PackageReference`.
 
 **Racional**: regras automatizadas evitam discussões subjetivas de estilo em revisão.
 
@@ -76,7 +86,7 @@ na contagem correta, e não na unicidade do eleitor.
 - Dentro de cada projeto, o código é organizado por **papel**, nunca por entidade:
   - `Domain/`: `Entities/`, `ValueObjects/`, `Enums/`, `Errors/`, `Services/`, `Common/`;
   - `Application/`: `UseCases/`, `Dtos/`, `Abstractions/<Área>/` (ex.: `Persistence/`),
-    `Errors/`;
+    `Errors/`, `Extensions/`;
   - `Infrastructure/`: `Persistence/{Repositories,Writers,Migrations}/`,
     `BackgroundServices/`, `Options/`;
   - `WebApi/`: `Endpoints/`, `Contracts/Requests/`, `Errors/`.
@@ -86,12 +96,24 @@ na contagem correta, e não na unicidade do eleitor.
   `GetPollResult`), e não só a entidade. A pasta contém `I<Comportamento>UseCase`, a
   implementação `<Comportamento>UseCase` (método `ExecuteAsync`) e os tipos usados só por
   esse caso de uso. Tipos compartilhados vão para `Application/Dtos/`.
-- **Options**: classes ligadas a configuração (`appsettings`) e consumidas via `IOptions<T>`,
-  `IOptionsSnapshot<T>` ou `IOptionsMonitor<T>` ficam em `Options/`, com sufixo `Options` e
-  uma constante `SectionName`. Se o namespace `<Projeto>.Options` esconder a classe
+- **Options**: classes ligadas a configuração (`appsettings`) ficam em `Options/`, com
+  sufixo `Options`, uma constante `public const string ConfigurationPath` com o caminho da
+  seção e propriedades `{ get; init; }`. Uma propriedade sem valor padrão seguro é `required`;
+  as regras de valor usam DataAnnotations (ex.: `[Range]`). O registro DEVE usar
+  `services.ConfigureOptions<T>(T.ConfigurationPath)`, de `Application/Extensions/`, que faz
+  `BindConfiguration`, `ValidateDataAnnotations`, `ValidateOnStart` e registra `T` a partir
+  de `IOptionsMonitor<T>.CurrentValue`. Consumidores recebem `T` diretamente, ou
+  `IOptionsMonitor<T>` quando precisam reagir a recarga. NÃO use `IOptions<T>` nem
+  `Configure<T>(section)`. Se o namespace `<Projeto>.Options` esconder a classe
   `Microsoft.Extensions.Options.Options`, use um alias de `using`.
 - **Um tipo top-level por arquivo**, e o arquivo tem o nome do tipo (genéricos usam o
   sufixo `OfT`, ex.: `ResultOfT.cs`).
+- **Visibilidade mínima**: todo membro (constante, campo, propriedade, método) DEVE ter o
+  menor modificador de acesso que o uso real exige. O padrão é `private`; `internal` ou
+  `public` só quando o membro é consumido fora do tipo ou do assembly. Constantes e campos
+  usados apenas na própria classe são sempre `private` (ex.: o nome da connection string
+  em `DependencyInjection`). Exceções: membros de interface, os exigidos por frameworks
+  (ex.: `Main`) e o `ConfigurationPath` das options.
 - **Namespace = pasta** (`<Projeto>.<Pasta>.<Subpasta>`), garantido no build pelo IDE0130.
   Fora o caso `Options`, nomes de pasta NÃO podem esconder tipos ou namespaces do .NET
   (ex.: `Http`, `Task`).
@@ -122,10 +144,9 @@ evita classes soltas. A verificação no build impede que a estrutura se degrade
   decorator ou o mesmo singleton exposto em várias interfaces/`IHostedService`. Mesmo
   assim, nenhum consumidor recebe o tipo concreto.
 - Cada projeto com serviços tem, na raiz, a classe estática `DependencyInjection` com o
-  método de extensão `Add{Projeto}` (`AddApplication`, `AddInfrastructure`, `AddWebApi`,
-  `AddWorkload`). O composition root (`Program.cs`) só encadeia esses métodos. O Domain
-  não referencia pacotes de DI (Princípio I), então seus serviços são registrados por
-  `AddApplication`.
+  método de extensão `Add{Projeto}` (`AddDomain`, `AddApplication`, `AddInfrastructure`,
+  `AddWebApi`, `AddWorkload`). O composition root (`Program.cs`) só encadeia esses
+  métodos.
 - Ficam fora da regra: entidades, value objects, DTOs, records, enums, classes estáticas
   de constantes ou erros, extensões de mapeamento (endpoints, `ErrorMapping`) e objetos
   de estado criados por execução com dados de runtime e sem I/O (ex.: acumuladores de
@@ -137,7 +158,8 @@ nos testes, e deixa explícito, num único lugar por camada, como a aplicação 
 
 ## Restrições Técnicas
 
-- Plataforma: .NET 10 (LTS), ASP.NET Core, C# na versão mais recente suportada.
+- Plataforma: .NET 10 (LTS), ASP.NET Core, C# na versão mais recente suportada. SDK e
+  framework são definidos em `global.json` e `Directory.Build.props`.
 - Testes: xUnit, com Testcontainers para integração.
 - Persistência, mensageria e cache: definidas em cada `/speckit.plan`, justificadas
   pelos requisitos da feature.
@@ -197,4 +219,4 @@ nos testes, e deixa explícito, num único lugar por camada, como a aplicação 
 - Violações justificadas são registradas em "Complexity Tracking" no plan da feature.
 - Toda revisão de PR DEVE verificar a conformidade com esta constitution.
 
-**Version**: 1.2.0 | **Ratified**: 2026-11-02 | **Last Amended**: 2026-11-04
+**Version**: 2.0.0 | **Ratified**: 2026-11-02 | **Last Amended**: 2026-11-05
