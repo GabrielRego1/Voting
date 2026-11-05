@@ -1,16 +1,14 @@
-using Application.Abstractions;
-using Application.Common;
+using Application.Abstractions.Persistence;
+using Application.Errors;
 using Domain.Common;
 using Domain.Entities;
 
-namespace Application.Votes;
-
-public sealed record CastVoteResult(VoteReceipt Receipt, bool IsReplay);
+namespace Application.UseCases.CastVote;
 
 /// <summary>
 /// Validates and records a vote. Multiple votes per voter are allowed and no per-origin limit exists (FR-006, FR-018).
 /// </summary>
-public sealed class CastVote(IPollRepository polls, IVoteWriter writer, TimeProvider time)
+public sealed class CastVoteUseCase(IPollRepository polls, IVoteWriter writer, TimeProvider time)
 {
     public const int MaxIdempotencyKeyLength = 64;
 

@@ -1,4 +1,4 @@
-using Application.Abstractions;
+using Application.Abstractions.Persistence;
 using Infrastructure.Hosting;
 using Infrastructure.Persistence;
 using Infrastructure.Votes;

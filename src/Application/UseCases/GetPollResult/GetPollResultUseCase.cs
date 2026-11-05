@@ -1,10 +1,10 @@
-using Application.Abstractions;
-using Application.Common;
+using Application.Abstractions.Persistence;
+using Application.Errors;
 using Domain.Common;
 
-namespace Application.Results;
+namespace Application.UseCases.GetPollResult;
 
-public sealed class GetResult(IPollRepository polls, IResultRepository results)
+public sealed class GetPollResultUseCase(IPollRepository polls, IResultRepository results)
 {
     public async Task<Result<PollResultDto>> ExecuteAsync(Guid pollId, CancellationToken cancellationToken = default)
     {

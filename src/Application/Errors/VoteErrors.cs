@@ -1,6 +1,6 @@
 using Domain.Common;
 
-namespace Application.Votes;
+namespace Application.Errors;
 
 public static class VoteErrors
 {

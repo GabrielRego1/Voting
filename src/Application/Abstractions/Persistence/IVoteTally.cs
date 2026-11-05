@@ -1,4 +1,4 @@
-namespace Application.Abstractions;
+namespace Application.Abstractions.Persistence;
 
 public interface IVoteTally
 {

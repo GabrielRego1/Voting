@@ -1,9 +1,7 @@
 using Domain.Entities;
 using Domain.Enums;
 
-namespace Application.Polls;
-
-public sealed record ParticipantDto(Guid Id, string Name, int Position);
+namespace Application.Dtos;
 
 public sealed record PollDto(
     Guid Id,

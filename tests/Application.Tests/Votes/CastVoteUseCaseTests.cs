@@ -1,11 +1,14 @@
-using Application.Polls;
+using Application.Abstractions.Persistence;
+using Application.Dtos;
 using Application.Tests.Fakes;
-using Application.Votes;
+using Application.UseCases.CastVote;
+using Application.UseCases.CreatePoll;
+using Application.UseCases.OpenPollVoting;
 using Microsoft.Extensions.Time.Testing;
 
 namespace Application.Tests.Votes;
 
-public sealed class CastVoteTests
+public sealed class CastVoteUseCaseTests
 {
     private readonly FakeTimeProvider _time = new(new DateTimeOffset(2026, 11, 2, 12, 0, 0, TimeSpan.Zero));
     private readonly InMemoryPollRepository _polls = new();
@@ -157,15 +160,15 @@ public sealed class CastVoteTests
         Assert.Equal(100, _writer.Writes.Count);
     }
 
-    private CastVote Sut()
+    private CastVoteUseCase Sut()
     {
-        return new CastVote(_polls, _writer, _time);
+        return new CastVoteUseCase(_polls, _writer, _time);
     }
 
     private async Task<PollDto> CreateOpenPollAsync()
     {
-        var created = await new CreatePoll(_polls, _time).ExecuteAsync(["Ana", "Bruno", "Carla"], Ct);
-        var opened = await new OpenPoll(_polls, _time).ExecuteAsync(created.Value.Id, Ct);
+        var created = await new CreatePollUseCase(_polls, _time).ExecuteAsync(["Ana", "Bruno", "Carla"], Ct);
+        var opened = await new OpenPollVotingUseCase(_polls, _time).ExecuteAsync(created.Value.Id, Ct);
         return opened.Value;
     }
 }

@@ -1,4 +1,4 @@
-using Application.Abstractions;
+using Application.Abstractions.Persistence;
 
 namespace Application.Tests.Fakes;
 

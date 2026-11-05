@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Application.Abstractions;
+using Application.Abstractions.Persistence;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.ValueObjects;

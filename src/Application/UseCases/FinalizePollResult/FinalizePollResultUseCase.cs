@@ -1,12 +1,12 @@
-using Application.Abstractions;
+using Application.Abstractions.Persistence;
 using Domain.Services;
 
-namespace Application.Results;
+namespace Application.UseCases.FinalizePollResult;
 
 /// <summary>
 /// Tallies a closed poll once: drains the votes still queued, counts them and stores the result (research R-05).
 /// </summary>
-public sealed class FinalizePoll(
+public sealed class FinalizePollResultUseCase(
     IPollRepository polls,
     IVoteWriter writer,
     IVoteTally tally,

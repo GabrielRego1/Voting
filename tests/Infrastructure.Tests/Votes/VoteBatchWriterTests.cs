@@ -1,6 +1,6 @@
 using Application;
-using Application.Abstractions;
-using Application.Votes;
+using Application.Abstractions.Persistence;
+using Application.Dtos;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Infrastructure.Tests.Fixtures;

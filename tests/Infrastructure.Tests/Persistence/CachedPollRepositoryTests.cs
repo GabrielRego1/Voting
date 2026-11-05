@@ -1,4 +1,4 @@
-using Application.Abstractions;
+using Application.Abstractions.Persistence;
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Infrastructure.Tests.Fixtures;

@@ -1,6 +1,6 @@
 using Domain.Common;
 
-namespace Application.Common;
+namespace Application.Errors;
 
 public static class ApplicationErrors
 {

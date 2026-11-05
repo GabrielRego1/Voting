@@ -1,4 +1,4 @@
-using Application.Abstractions;
+using Application.Abstractions.Persistence;
 using Npgsql;
 
 namespace Infrastructure.Persistence;

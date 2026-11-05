@@ -1,10 +1,8 @@
-using Application.Polls;
+using Application.Dtos;
 using Domain.Entities;
 using Domain.Enums;
 
-namespace Application.Results;
-
-public sealed record ParticipantTallyDto(Guid ParticipantId, string Name, long Votes, decimal Percentage);
+namespace Application.UseCases.GetPollResult;
 
 public sealed record PollResultDto(
     Guid PollId,

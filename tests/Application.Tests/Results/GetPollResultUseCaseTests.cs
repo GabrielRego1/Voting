@@ -1,6 +1,7 @@
-using Application.Polls;
-using Application.Results;
 using Application.Tests.Fakes;
+using Application.UseCases.CreatePoll;
+using Application.UseCases.GetPollResult;
+using Application.UseCases.OpenPollVoting;
 using Domain.Entities;
 using Domain.Enums;
 using Domain.ValueObjects;
@@ -8,13 +9,13 @@ using Microsoft.Extensions.Time.Testing;
 
 namespace Application.Tests.Results;
 
-public sealed class GetResultTests
+public sealed class GetPollResultUseCaseTests
 {
     private readonly FakeTimeProvider _time = new(new DateTimeOffset(2026, 11, 2, 12, 0, 0, TimeSpan.Zero));
     private readonly InMemoryPollRepository _polls = new();
     private readonly InMemoryResultRepository _results;
 
-    public GetResultTests()
+    public GetPollResultUseCaseTests()
     {
         _results = new InMemoryResultRepository(_polls);
     }
@@ -32,11 +33,11 @@ public sealed class GetResultTests
     [Fact]
     public async Task ExecuteAsync_CreatedOpenOrClosedWithoutResult_FailsWithResultNotAvailable()
     {
-        var created = await new CreatePoll(_polls, _time).ExecuteAsync(["Ana", "Bruno", "Carla"], Ct);
+        var created = await new CreatePollUseCase(_polls, _time).ExecuteAsync(["Ana", "Bruno", "Carla"], Ct);
         var pollId = created.Value.Id;
 
         var whenCreated = await Sut().ExecuteAsync(pollId, Ct);
-        await new OpenPoll(_polls, _time).ExecuteAsync(pollId, Ct);
+        await new OpenPollVotingUseCase(_polls, _time).ExecuteAsync(pollId, Ct);
         var whenOpen = await Sut().ExecuteAsync(pollId, Ct);
         _time.Advance(TimeSpan.FromSeconds(31));
         var whenClosed = await Sut().ExecuteAsync(pollId, Ct);
@@ -49,8 +50,8 @@ public sealed class GetResultTests
     [Fact]
     public async Task ExecuteAsync_StoredResult_ReturnsResultWithParticipants()
     {
-        var created = await new CreatePoll(_polls, _time).ExecuteAsync(["Ana", "Bruno", "Carla"], Ct);
-        var poll = (await new OpenPoll(_polls, _time).ExecuteAsync(created.Value.Id, Ct)).Value;
+        var created = await new CreatePollUseCase(_polls, _time).ExecuteAsync(["Ana", "Bruno", "Carla"], Ct);
+        var poll = (await new OpenPollVotingUseCase(_polls, _time).ExecuteAsync(created.Value.Id, Ct)).Value;
         var p = poll.Participants;
         await _results.TryAddAsync(
             new PollResult(
@@ -78,8 +79,8 @@ public sealed class GetResultTests
         Assert.Equal([50.00m, 50.00m, 0.00m], dto.Tallies.Select(t => t.Percentage));
     }
 
-    private GetResult Sut()
+    private GetPollResultUseCase Sut()
     {
-        return new GetResult(_polls, _results);
+        return new GetPollResultUseCase(_polls, _results);
     }
 }

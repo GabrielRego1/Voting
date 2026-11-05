@@ -1,11 +1,11 @@
-using Application.Polls;
 using Application.Tests.Fakes;
+using Application.UseCases.CreatePoll;
 using Domain.Enums;
 using Microsoft.Extensions.Time.Testing;
 
 namespace Application.Tests.Polls;
 
-public sealed class CreatePollTests
+public sealed class CreatePollUseCaseTests
 {
     private readonly FakeTimeProvider _time = new(new DateTimeOffset(2026, 11, 2, 12, 0, 0, TimeSpan.Zero));
     private readonly InMemoryPollRepository _repository = new();
@@ -13,7 +13,7 @@ public sealed class CreatePollTests
     [Fact]
     public async Task ExecuteAsync_ValidNames_PersistsAndReturnsCreatedPoll()
     {
-        var sut = new CreatePoll(_repository, _time);
+        var sut = new CreatePollUseCase(_repository, _time);
 
         var result = await sut.ExecuteAsync(["Ana", "Bruno", "Carla"], TestContext.Current.CancellationToken);
 
@@ -28,7 +28,7 @@ public sealed class CreatePollTests
     [Fact]
     public async Task ExecuteAsync_InvalidNames_FailsWithInvalidParticipantsAndPersistsNothing()
     {
-        var sut = new CreatePoll(_repository, _time);
+        var sut = new CreatePollUseCase(_repository, _time);
 
         var result = await sut.ExecuteAsync(["Ana", "Bruno"], TestContext.Current.CancellationToken);
 

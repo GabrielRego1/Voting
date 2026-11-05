@@ -1,11 +1,13 @@
-using Application.Polls;
 using Application.Tests.Fakes;
+using Application.UseCases.CreatePoll;
+using Application.UseCases.GetPollDetails;
+using Application.UseCases.OpenPollVoting;
 using Domain.Enums;
 using Microsoft.Extensions.Time.Testing;
 
 namespace Application.Tests.Polls;
 
-public sealed class GetPollTests
+public sealed class GetPollDetailsUseCaseTests
 {
     private readonly FakeTimeProvider _time = new(new DateTimeOffset(2026, 11, 2, 12, 0, 0, TimeSpan.Zero));
     private readonly InMemoryPollRepository _repository = new();
@@ -13,7 +15,7 @@ public sealed class GetPollTests
     [Fact]
     public async Task ExecuteAsync_UnknownPoll_FailsWithPollNotFound()
     {
-        var sut = new GetPoll(_repository, _time);
+        var sut = new GetPollDetailsUseCase(_repository, _time);
 
         var result = await sut.ExecuteAsync(Guid.NewGuid(), TestContext.Current.CancellationToken);
 
@@ -23,12 +25,12 @@ public sealed class GetPollTests
     [Fact]
     public async Task ExecuteAsync_ExistingPoll_ReturnsStatusDerivedFromClock()
     {
-        var created = await new CreatePoll(_repository, _time)
+        var created = await new CreatePollUseCase(_repository, _time)
             .ExecuteAsync(["Ana", "Bruno", "Carla"], TestContext.Current.CancellationToken);
-        var sut = new GetPoll(_repository, _time);
+        var sut = new GetPollDetailsUseCase(_repository, _time);
 
         var beforeOpen = await sut.ExecuteAsync(created.Value.Id, TestContext.Current.CancellationToken);
-        await new OpenPoll(_repository, _time).ExecuteAsync(created.Value.Id, TestContext.Current.CancellationToken);
+        await new OpenPollVotingUseCase(_repository, _time).ExecuteAsync(created.Value.Id, TestContext.Current.CancellationToken);
         _time.Advance(TimeSpan.FromSeconds(10));
         var afterOpen = await sut.ExecuteAsync(created.Value.Id, TestContext.Current.CancellationToken);
 

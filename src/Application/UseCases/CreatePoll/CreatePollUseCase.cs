@@ -1,10 +1,11 @@
-using Application.Abstractions;
+using Application.Abstractions.Persistence;
+using Application.Dtos;
 using Domain.Common;
 using Domain.Entities;
 
-namespace Application.Polls;
+namespace Application.UseCases.CreatePoll;
 
-public sealed class CreatePoll(IPollRepository polls, TimeProvider time)
+public sealed class CreatePollUseCase(IPollRepository polls, TimeProvider time)
 {
     public async Task<Result<PollDto>> ExecuteAsync(IReadOnlyList<string>? participantNames, CancellationToken cancellationToken = default)
     {

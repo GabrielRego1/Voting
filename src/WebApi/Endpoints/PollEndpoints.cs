@@ -1,4 +1,6 @@
-using Application.Polls;
+using Application.UseCases.CreatePoll;
+using Application.UseCases.GetPollDetails;
+using Application.UseCases.OpenPollVoting;
 using WebApi.Errors;
 
 namespace WebApi.Endpoints;
@@ -9,7 +11,7 @@ public static class PollEndpoints
 {
     public static IEndpointRouteBuilder MapPollEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/polls", async (CreatePollRequest? request, CreatePoll createPoll, CancellationToken ct) =>
+        app.MapPost("/polls", async (CreatePollRequest? request, CreatePollUseCase createPoll, CancellationToken ct) =>
         {
             var result = await createPoll.ExecuteAsync(request?.Participants, ct);
             return result.IsSuccess
@@ -17,15 +19,15 @@ public static class PollEndpoints
                 : result.Error!.ToProblem();
         });
 
-        app.MapGet("/polls/{pollId:guid}", async (Guid pollId, GetPoll getPoll, CancellationToken ct) =>
+        app.MapGet("/polls/{pollId:guid}", async (Guid pollId, GetPollDetailsUseCase getPollDetails, CancellationToken ct) =>
         {
-            var result = await getPoll.ExecuteAsync(pollId, ct);
+            var result = await getPollDetails.ExecuteAsync(pollId, ct);
             return result.IsSuccess ? Results.Ok(result.Value) : result.Error!.ToProblem();
         });
 
-        app.MapPost("/polls/{pollId:guid}/open", async (Guid pollId, OpenPoll openPoll, CancellationToken ct) =>
+        app.MapPost("/polls/{pollId:guid}/open", async (Guid pollId, OpenPollVotingUseCase openPollVoting, CancellationToken ct) =>
         {
-            var result = await openPoll.ExecuteAsync(pollId, ct);
+            var result = await openPollVoting.ExecuteAsync(pollId, ct);
             return result.IsSuccess ? Results.Ok(result.Value) : result.Error!.ToProblem();
         });
 

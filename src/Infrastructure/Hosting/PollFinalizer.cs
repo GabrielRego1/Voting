@@ -1,5 +1,5 @@
-using Application.Abstractions;
-using Application.Results;
+using Application.Abstractions.Persistence;
+using Application.UseCases.FinalizePollResult;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -11,7 +11,7 @@ namespace Infrastructure.Hosting;
 /// </summary>
 public sealed partial class PollFinalizer(
     IPollRepository polls,
-    FinalizePoll finalizePoll,
+    FinalizePollResultUseCase finalizePollResult,
     TimeProvider time,
     ILogger<PollFinalizer> logger) : BackgroundService
 {
@@ -46,7 +46,7 @@ public sealed partial class PollFinalizer(
         {
             foreach (var poll in await polls.ListDueForFinalizationAsync(time.GetUtcNow(), stoppingToken))
             {
-                if (await finalizePoll.ExecuteAsync(poll.Id, stoppingToken))
+                if (await finalizePollResult.ExecuteAsync(poll.Id, stoppingToken))
                 {
                     LogFinalized(logger, poll.Id);
                 }

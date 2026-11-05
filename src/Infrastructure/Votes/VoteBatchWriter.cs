@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Threading.Channels;
-using Application.Abstractions;
-using Application.Votes;
+using Application.Abstractions.Persistence;
+using Application.Dtos;
 using Domain.Entities;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;

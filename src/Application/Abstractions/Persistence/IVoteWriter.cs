@@ -1,7 +1,6 @@
-using Application.Votes;
 using Domain.Entities;
 
-namespace Application.Abstractions;
+namespace Application.Abstractions.Persistence;
 
 /// <summary>
 /// Durably records votes. The returned task completes only after the vote is committed (FR-008).

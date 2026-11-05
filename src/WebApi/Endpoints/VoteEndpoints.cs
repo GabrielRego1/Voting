@@ -1,4 +1,4 @@
-using Application.Votes;
+using Application.UseCases.CastVote;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Errors;
 
@@ -16,7 +16,7 @@ public static class VoteEndpoints
             Guid pollId,
             [FromHeader(Name = IdempotencyKeyHeader)] string? idempotencyKey,
             CastVoteRequest? request,
-            CastVote castVote,
+            CastVoteUseCase castVote,
             CancellationToken ct) =>
         {
             var result = await castVote.ExecuteAsync(pollId, request?.ParticipantId ?? Guid.Empty, idempotencyKey, ct);

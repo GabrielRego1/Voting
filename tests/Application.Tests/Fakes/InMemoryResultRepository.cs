@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using Application.Abstractions;
+using Application.Abstractions.Persistence;
 using Domain.Entities;
 
 namespace Application.Tests.Fakes;

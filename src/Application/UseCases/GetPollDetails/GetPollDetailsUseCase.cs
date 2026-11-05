@@ -1,10 +1,11 @@
-using Application.Abstractions;
-using Application.Common;
+using Application.Abstractions.Persistence;
+using Application.Dtos;
+using Application.Errors;
 using Domain.Common;
 
-namespace Application.Polls;
+namespace Application.UseCases.GetPollDetails;
 
-public sealed class GetPoll(IPollRepository polls, TimeProvider time)
+public sealed class GetPollDetailsUseCase(IPollRepository polls, TimeProvider time)
 {
     public async Task<Result<PollDto>> ExecuteAsync(Guid pollId, CancellationToken cancellationToken = default)
     {
