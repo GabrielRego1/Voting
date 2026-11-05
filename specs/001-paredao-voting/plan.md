@@ -85,12 +85,13 @@ src/
 │   ├── ValueObjects/            # Participant, ParticipantTally, VoteEvaluation
 │   ├── Enums/                   # PollStatus, Outcome
 │   ├── Errors/                  # PollErrors, VoteRejection
-│   ├── Services/                # ResultCalculator
+│   ├── Services/                # IResultCalculator, ResultCalculator
 │   └── Common/                  # Result, Result<T>, DomainError, Instants
 ├── Application/
+│   ├── DependencyInjection.cs   # AddApplication (registra casos de uso e serviços de domínio)
 │   ├── Abstractions/
 │   │   └── Persistence/         # IPollRepository, IVoteWriter, IResultRepository, IVoteTally, VoteWriteOutcome
-│   ├── UseCases/                # uma pasta por caso de uso
+│   ├── UseCases/                # uma pasta por caso de uso: I<X>UseCase + <X>UseCase
 │   │   ├── CreatePoll/          # CreatePollUseCase
 │   │   ├── OpenPollVoting/      # OpenPollVotingUseCase
 │   │   ├── GetPollDetails/      # GetPollDetailsUseCase
@@ -100,19 +101,21 @@ src/
 │   ├── Dtos/                    # DTOs compartilhados: PollDto, ParticipantDto, VoteReceipt
 │   └── Errors/                  # ApplicationErrors, VoteErrors
 ├── Infrastructure/
+│   ├── DependencyInjection.cs   # AddInfrastructure
 │   ├── Persistence/
 │   │   ├── Repositories/        # PollRepository, CachedPollRepository, ResultRepository, VoteTally
 │   │   ├── Writers/             # VoteBatchWriter (Channel + group commit)
 │   │   └── Migrations/          # SchemaInitializer, NNN_*.sql
 │   ├── BackgroundServices/      # PollFinalizer
-│   └── Configuration/           # VoteWriterOptions
+│   └── Options/                 # VoteWriterOptions (binding do appsettings via IOptions)
 └── WebApi/
+    ├── DependencyInjection.cs   # AddWebApi
     ├── Endpoints/               # Polls, Votes, Results
     ├── Contracts/Requests/      # CreatePollRequest, CastVoteRequest
     └── Errors/                  # mapeamento de rejeições → Problem Details
 
 tools/
-└── Workload/                    # CLI do gerador de carga (Program, WorkloadApp)
+└── Workload/                    # CLI do gerador de carga (Program, IWorkloadApp, DependencyInjection: AddWorkload)
     ├── Configuration/           # WorkloadOptions, OutputFormat, OptionsParser
     ├── ApiClient/               # VotingApiClient, PollInfo, VoteResponse
     ├── Load/                    # LoadRunner, ParticipantPicker
@@ -120,19 +123,25 @@ tools/
     └── Reporting/               # Report, ReportBuilder, ReportWriter
 
 tests/
-├── Domain.Tests/                # unit
-├── Application.Tests/           # unit (repositórios fake em memória, FakeTimeProvider)
-├── Infrastructure.Tests/        # integração (Testcontainers)
-├── WebApi.Tests/                # integração (WebApplicationFactory + Testcontainers)
-└── Workload.Tests/              # unit (agendamento, percentis, relatório) + integração em taxa baixa
+├── UnitTests/                   # todos os testes de unidade
+│   ├── Domain/                  # Entities/, Services/
+│   ├── Application/             # UseCases/<X>/, Fakes/ (repositórios fake em memória, FakeTimeProvider)
+│   └── Workload/                # Configuration/, Load/, Metrics/, Reporting/
+└── IntegrationTests/            # todos os testes de integração (Testcontainers)
+    ├── Infrastructure/          # Fixtures/, BackgroundServices/, Persistence/{Repositories,Writers,Migrations}/
+    ├── WebApi/                  # Fixtures/ (WebApplicationFactory), Endpoints/
+    └── Workload/                # gerador contra a API em taxa baixa
 ```
 
-**Structure Decision**: as quatro camadas exigidas pelo Princípio I ficam em `src/`. O gerador de carga fica em `tools/`, porque é um cliente externo da API (não é camada do sistema) e só referencia contratos HTTP, nunca projetos de `src/`. Cada projeto de produção tem um projeto de testes correspondente.
+**Structure Decision**: as quatro camadas exigidas pelo Princípio I ficam em `src/`. O gerador de carga fica em `tools/`, porque é um cliente externo da API (não é camada do sistema) e só referencia contratos HTTP, nunca projetos de `src/`. Os testes ficam em dois projetos, agrupados por tipo (`UnitTests` e `IntegrationTests`), com uma pasta por projeto testado que espelha o código de produção.
 
 Dentro de cada camada, o código é organizado por **papel** (entidades, value objects, casos de uso, repositórios...), com estas regras:
 - cada caso de uso tem a própria pasta em `Application/UseCases/`, com nome descritivo do comportamento e sufixo `UseCase`;
 - um tipo por arquivo;
-- o namespace segue a pasta, garantido no build pelo IDE0130 (`.editorconfig`).
+- o namespace segue a pasta, garantido no build pelo IDE0130 (`.editorconfig`);
+- todo serviço tem interface, é registrado no DI pela interface e cada camada expõe `Add{Camada}` na sua classe `DependencyInjection`.
+
+Essas regras são os Princípios V (Organização do Código) e VI (Inversão de Controle) da constitution.
 
 ## Etapas do plan
 

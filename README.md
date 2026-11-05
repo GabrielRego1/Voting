@@ -49,6 +49,8 @@ Pré-requisitos: .NET SDK 10 e Docker em execução (portas `5080` e `5432` livr
 |---|---|
 | `make setup` | Verifica pré-requisitos, sobe o PostgreSQL e compila |
 | `make test` | Testes unitários e de integração (Testcontainers sobe um PostgreSQL próprio) |
+| `make test-unit` | Só os testes de unidade (não precisa de Docker) |
+| `make test-integration` | Só os testes de integração |
 | `make run` | Sobe a API em `http://localhost:5080` |
 | `make load` | Sobe a API e roda o gerador a 10.000 votos/s (`RATE`, `DURATION` etc. configuráveis) |
 | `make stress BENCH_VERSION=<v>` | Rampa até a ruptura e gera o benchmark em `benchmarks/<v>/` (**recria o banco local**) |
