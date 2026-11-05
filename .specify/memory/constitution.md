@@ -8,8 +8,8 @@ concorrência, sem compromisso com produção.
 
 ### I. Clean Architecture
 
-- A solução DEVE ser organizada em camadas: `Voting.Domain`, `Voting.Application`,
-  `Voting.Infrastructure` e `Voting.Api`.
+- A solução DEVE ser organizada em camadas: `Domain`, `Application`,
+  `Infrastructure` e `WebApi`.
 - Dependências apontam SEMPRE para dentro: Domain não referencia nenhuma outra camada
   nem pacotes de infraestrutura (EF Core, ASP.NET, brokers).
 - Regras de negócio (abertura/encerramento de votação, validação de participante,
@@ -123,4 +123,4 @@ na contagem correta, e não na unicidade do eleitor.
 - Violações justificadas são registradas em "Complexity Tracking" no plan da feature.
 - Toda revisão de PR DEVE verificar a conformidade com esta constitution.
 
-**Version**: 1.0.0 | **Ratified**: 2026-11-02 | **Last Amended**: 2026-11-02
+**Version**: 1.0.1 | **Ratified**: 2026-11-02 | **Last Amended**: 2026-11-04
