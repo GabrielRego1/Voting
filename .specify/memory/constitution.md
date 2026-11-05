@@ -22,8 +22,9 @@ concorrência, sem compromisso com produção.
 ### II. Test-Driven Development (INEGOCIÁVEL)
 
 - Todo comportamento novo DEVE começar por um teste que falha (Red → Green → Refactor).
-- Testes de unidade cobrem Domain e Application; testes de integração cobrem API e
-  Infrastructure contra dependências reais (Testcontainers), sem mocks de banco.
+- Testes de unidade (projeto `UnitTests`) cobrem Domain, Application e a lógica de
+  ferramentas; testes de integração (projeto `IntegrationTests`) cobrem WebApi,
+  Infrastructure e o Workload contra a API real, com Testcontainers e sem mocks de banco.
 - Nenhum PR é aceito com testes falhando, ignorados (`Skip`) sem justificativa ou
   com código de produção sem teste correspondente.
 - Nomes de testes descrevem o comportamento: `Method_Scenario_ExpectedResult`.
@@ -60,6 +61,72 @@ na contagem correta, e não na unicidade do eleitor.
   documentação (specs, plans, README) fica em português.
 
 **Racional**: regras automatizadas evitam discussões subjetivas de estilo em revisão.
+
+### V. Organização do Código
+
+- Projetos são nomeados pela camada, sem prefixo de produto: `Domain`, `Application`,
+  `Infrastructure`, `WebApi`. Ferramentas ficam em `tools/` (ex.: `Workload`).
+- Dentro de cada projeto, o código é organizado por **papel**, nunca por entidade:
+  - `Domain/`: `Entities/`, `ValueObjects/`, `Enums/`, `Errors/`, `Services/`, `Common/`;
+  - `Application/`: `UseCases/`, `Dtos/`, `Abstractions/<Área>/` (ex.: `Persistence/`),
+    `Errors/`;
+  - `Infrastructure/`: `Persistence/{Repositories,Writers,Migrations}/`,
+    `BackgroundServices/`, `Options/`;
+  - `WebApi/`: `Endpoints/`, `Contracts/Requests/`, `Errors/`.
+  Uma pasta nova de papel exige justificativa no plan.
+- **Casos de uso**: cada um tem a própria pasta em `Application/UseCases/<Comportamento>/`,
+  com nome que descreve o comportamento (verbo + objeto, ex.: `OpenPollVoting`,
+  `GetPollResult`), e não só a entidade. A pasta contém `I<Comportamento>UseCase`, a
+  implementação `<Comportamento>UseCase` (método `ExecuteAsync`) e os tipos usados só por
+  esse caso de uso. Tipos compartilhados vão para `Application/Dtos/`.
+- **Options**: classes ligadas a configuração (`appsettings`) e consumidas via `IOptions<T>`,
+  `IOptionsSnapshot<T>` ou `IOptionsMonitor<T>` ficam em `Options/`, com sufixo `Options` e
+  uma constante `SectionName`. Se o namespace `<Projeto>.Options` esconder a classe
+  `Microsoft.Extensions.Options.Options`, use um alias de `using`.
+- **Um tipo top-level por arquivo**, e o arquivo tem o nome do tipo (genéricos usam o
+  sufixo `OfT`, ex.: `ResultOfT.cs`).
+- **Namespace = pasta** (`<Projeto>.<Pasta>.<Subpasta>`), garantido no build pelo IDE0130.
+  Fora o caso `Options`, nomes de pasta NÃO podem esconder tipos ou namespaces do .NET
+  (ex.: `Http`, `Task`).
+- Os tipos de request da API ficam em `WebApi/Contracts/Requests/`, nunca dentro dos
+  arquivos de endpoint.
+- **Testes são agrupados por tipo, não por camada**: `tests/UnitTests/UnitTests.csproj`
+  e `tests/IntegrationTests/IntegrationTests.csproj`. Dentro de cada um, há uma pasta por
+  projeto testado (`Domain/`, `Application/`, `Infrastructure/`, `WebApi/`, `Workload/`)
+  que espelha as pastas do código de produção. Fakes e fixtures ficam em `Fakes/` ou
+  `Fixtures/` dentro da pasta do projeto testado. A classe de teste se chama
+  `<TipoTestado>Tests`.
+
+**Racional**: uma estrutura previsível deixa claro onde cada código novo deve morar e
+evita classes soltas. A verificação no build impede que a estrutura se degrade com o tempo.
+
+### VI. Inversão de Controle
+
+- Todo **serviço** (classe com comportamento consumida por outra classe: casos de uso,
+  repositórios, writers, clientes HTTP, serviços de domínio, orquestradores) DEVE ter uma
+  interface `I<Nome>` e ser consumido **pela interface**. A interface fica ao lado da
+  implementação, exceto as portas de infraestrutura, que ficam em
+  `Application/Abstractions/<Área>/` (Princípio I).
+- Serviços DEVEM ser registrados no container de DI pela interface
+  (`AddSingleton<IFoo, Foo>()` ou equivalente) e recebidos por injeção no construtor.
+  Consumidores NÃO instanciam serviços com `new`. Classes estáticas com comportamento
+  NÃO são permitidas para serviços.
+- Um registro pelo tipo concreto só é permitido para compor instâncias: o alvo de um
+  decorator ou o mesmo singleton exposto em várias interfaces/`IHostedService`. Mesmo
+  assim, nenhum consumidor recebe o tipo concreto.
+- Cada projeto com serviços tem, na raiz, a classe estática `DependencyInjection` com o
+  método de extensão `Add{Projeto}` (`AddApplication`, `AddInfrastructure`, `AddWebApi`,
+  `AddWorkload`). O composition root (`Program.cs`) só encadeia esses métodos. O Domain
+  não referencia pacotes de DI (Princípio I), então seus serviços são registrados por
+  `AddApplication`.
+- Ficam fora da regra: entidades, value objects, DTOs, records, enums, classes estáticas
+  de constantes ou erros, extensões de mapeamento (endpoints, `ErrorMapping`) e objetos
+  de estado criados por execução com dados de runtime e sem I/O (ex.: acumuladores de
+  métricas). Esses objetos podem ser criados com `new` pelo serviço que os possui.
+- Testes de unidade instanciam o SUT concreto e fornecem fakes das interfaces.
+
+**Racional**: depender de abstrações permite trocar implementações e isolar cada unidade
+nos testes, e deixa explícito, num único lugar por camada, como a aplicação é montada.
 
 ## Restrições Técnicas
 
@@ -123,4 +190,4 @@ na contagem correta, e não na unicidade do eleitor.
 - Violações justificadas são registradas em "Complexity Tracking" no plan da feature.
 - Toda revisão de PR DEVE verificar a conformidade com esta constitution.
 
-**Version**: 1.0.1 | **Ratified**: 2026-11-02 | **Last Amended**: 2026-11-04
+**Version**: 1.1.0 | **Ratified**: 2026-11-02 | **Last Amended**: 2026-11-04
