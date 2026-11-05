@@ -75,12 +75,13 @@ specs/001-paredao-voting/
 
 ```text
 Voting.slnx
-Directory.Build.props            # + TreatWarningsAsErrors
+Directory.Build.props            # TargetFramework + TreatWarningsAsErrors (tests/ tem o seu, com OutputType e pacotes de teste)
 Directory.Packages.props         # Central Package Management
 docker-compose.yml               # postgres:17
 
 src/
-├── Domain/
+├── Domain/                      # FrameworkReference Microsoft.AspNetCore.App (herdada pelas demais camadas)
+│   ├── DependencyInjection.cs   # AddDomain
 │   ├── Entities/                # Poll, Vote, PollResult
 │   ├── ValueObjects/            # Participant, ParticipantTally, VoteEvaluation
 │   ├── Enums/                   # PollStatus, Outcome
@@ -88,7 +89,8 @@ src/
 │   ├── Services/                # IResultCalculator, ResultCalculator
 │   └── Common/                  # Result, Result<T>, DomainError, Instants
 ├── Application/
-│   ├── DependencyInjection.cs   # AddApplication (registra casos de uso e serviços de domínio)
+│   ├── DependencyInjection.cs   # AddApplication (registra os casos de uso)
+│   ├── Extensions/              # ConfigureOptions<T> (binding + validação de options)
 │   ├── Abstractions/
 │   │   └── Persistence/         # IPollRepository, IVoteWriter, IResultRepository, IVoteTally, VoteWriteOutcome
 │   ├── UseCases/                # uma pasta por caso de uso: I<X>UseCase + <X>UseCase
@@ -107,7 +109,7 @@ src/
 │   │   ├── Writers/             # VoteBatchWriter (Channel + group commit)
 │   │   └── Migrations/          # SchemaInitializer, NNN_*.sql
 │   ├── BackgroundServices/      # PollFinalizer
-│   └── Options/                 # VoteWriterOptions (binding do appsettings via IOptions)
+│   └── Options/                 # VoteWriterOptions (ConfigurationPath + DataAnnotations)
 └── WebApi/
     ├── DependencyInjection.cs   # AddWebApi
     ├── Endpoints/               # Polls, Votes, Results
