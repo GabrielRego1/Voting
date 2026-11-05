@@ -1,11 +1,10 @@
 using Application.UseCases.CreatePoll;
 using Application.UseCases.GetPollDetails;
 using Application.UseCases.OpenPollVoting;
+using WebApi.Contracts.Requests;
 using WebApi.Errors;
 
 namespace WebApi.Endpoints;
-
-public sealed record CreatePollRequest(IReadOnlyList<string>? Participants);
 
 public static class PollEndpoints
 {

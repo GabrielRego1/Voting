@@ -1,10 +1,9 @@
 using Application.UseCases.CastVote;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Contracts.Requests;
 using WebApi.Errors;
 
 namespace WebApi.Endpoints;
-
-public sealed record CastVoteRequest(Guid ParticipantId);
 
 public static class VoteEndpoints
 {
