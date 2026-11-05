@@ -13,7 +13,7 @@ RESULT_TIMEOUT ?= 15
 API_LOG        ?= artifacts/api.log
 
 SOLUTION := Voting.slnx
-API_BIN  := src/Voting.Api/bin/$(CONFIGURATION)/net10.0
+API_BIN  := src/WebApi/bin/$(CONFIGURATION)/net10.0
 
 .DEFAULT_GOAL := help
 .ONESHELL:
@@ -38,7 +38,7 @@ test: ## Run unit and integration tests (Testcontainers starts its own PostgreSQ
 
 run: setup ## Start the API in the foreground for manual testing
 	cd $(API_BIN)
-	ASPNETCORE_ENVIRONMENT=Development exec dotnet Voting.Api.dll
+	ASPNETCORE_ENVIRONMENT=Development exec dotnet WebApi.dll
 
 load: setup ## Start the API in the background and run the load generator against it
 	@mkdir -p $(dir $(API_LOG))
@@ -46,7 +46,7 @@ load: setup ## Start the API in the background and run the load generator agains
 	  echo "error: something is already listening on $(BASE_URL); stop it first"; exit 1
 	fi
 	log=$$(realpath $(API_LOG))
-	(cd $(API_BIN) && ASPNETCORE_ENVIRONMENT=Development exec dotnet Voting.Api.dll) >"$$log" 2>&1 &
+	(cd $(API_BIN) && ASPNETCORE_ENVIRONMENT=Development exec dotnet WebApi.dll) >"$$log" 2>&1 &
 	api_pid=$$!
 	trap 'kill $$api_pid 2>/dev/null || true; wait $$api_pid 2>/dev/null || true' EXIT
 	echo "API started (pid $$api_pid, log $(API_LOG)); waiting for it to accept requests..."
@@ -54,7 +54,7 @@ load: setup ## Start the API in the background and run the load generator agains
 	  $(BASE_URL)/polls/00000000-0000-0000-0000-000000000000 \
 	  || { echo "error: API did not start; see $(API_LOG)"; exit 1; }
 	echo "API ready; running load (~$(DURATION) s of votes + up to $(RESULT_TIMEOUT) s for the result)..."
-	dotnet run --project tools/Voting.Workload -c $(CONFIGURATION) --no-build -- \
+	dotnet run --project tools/Workload -c $(CONFIGURATION) --no-build -- \
 	  --base-url $(BASE_URL) --rate $(RATE) --duration $(DURATION) \
 	  --distribution $(DISTRIBUTION) --retry-fraction $(RETRY_FRACTION) --result-timeout $(RESULT_TIMEOUT) --output $(OUTPUT)
 

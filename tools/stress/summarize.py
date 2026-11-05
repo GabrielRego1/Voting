@@ -229,7 +229,7 @@ def render_readme(summary):
     w("## Metodologia")
     w("")
     w(f"- Rampa de taxas `{' '.join(str(r) for r in params['rampRates'])}` votos/s, cada degrau com um paredão novo e "
-      f"{params['durationSeconds']} s de envio em modelo aberto (`Voting.Workload`), distribuição `{params['distribution']}`, "
+      f"{params['durationSeconds']} s de envio em modelo aberto (`Workload`), distribuição `{params['distribution']}`, "
       f"`--retry-fraction {params['retryFraction']}` e até {params['connections']} conexões HTTP.")
     w("- Um warm-up curto (descartado) aquece JIT, pool de conexões e cache antes da rampa.")
     w("- A rampa para no primeiro degrau reprovado"

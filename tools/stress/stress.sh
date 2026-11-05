@@ -30,8 +30,8 @@ MIN_ACHIEVED=${MIN_ACHIEVED:-0.98}
 FORCE=${FORCE:-0}
 BASE_URL=http://localhost:5080
 
-API_BIN=src/Voting.Api/bin/Release/net10.0
-WORKLOAD_DLL=$root/tools/Voting.Workload/bin/Release/net10.0/Voting.Workload.dll
+API_BIN=src/WebApi/bin/Release/net10.0
+WORKLOAD_DLL=$root/tools/Workload/bin/Release/net10.0/Workload.dll
 out=$root/benchmarks/$BENCH_VERSION
 raw=$out/raw
 
@@ -58,7 +58,7 @@ docker update --cpuset-cpus "$PG_CPUS" "$pg_container" >/dev/null
 pg_pid=$(docker inspect -f '{{.State.Pid}}' "$pg_container")
 
 log "starting API pinned to CPUs $API_CPUS"
-(cd "$API_BIN" && ASPNETCORE_ENVIRONMENT=Development exec taskset -c "$API_CPUS" dotnet Voting.Api.dll) >"$raw/api.log" 2>&1 &
+(cd "$API_BIN" && ASPNETCORE_ENVIRONMENT=Development exec taskset -c "$API_CPUS" dotnet WebApi.dll) >"$raw/api.log" 2>&1 &
 api_pid=$!
 trap 'kill $api_pid 2>/dev/null || true; wait $api_pid 2>/dev/null || true' EXIT
 curl -s -o /dev/null --retry-connrefused --retry 30 --retry-delay 1 \
@@ -79,7 +79,7 @@ jq -n \
   --argjson onAc "$on_ac" --arg powerProfile "$power_profile" --arg governor "$governor" \
   --arg version "$BENCH_VERSION" \
   --arg commit "$(git rev-parse HEAD)" \
-  --arg dirty "$(git status --porcelain -- src tools/Voting.Workload | head -1)" \
+  --arg dirty "$(git status --porcelain -- src tools/Workload | head -1)" \
   --arg date "$(date -Iseconds)" \
   --arg cpu "$(lscpu | sed -n 's/^Model name: *//p')" \
   --argjson logicalCpus "$(nproc)" \
