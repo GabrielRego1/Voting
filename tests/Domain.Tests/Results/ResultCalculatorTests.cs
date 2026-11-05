@@ -110,6 +110,6 @@ public sealed class ResultCalculatorTests
             [Poll.Participants[1].Id] = second,
             [Poll.Participants[2].Id] = third,
         };
-        return ResultCalculator.Calculate(Poll, votes, FinalizedAt);
+        return new ResultCalculator().Calculate(Poll, votes, FinalizedAt);
     }
 }

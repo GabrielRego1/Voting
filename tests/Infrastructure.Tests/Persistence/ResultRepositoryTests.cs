@@ -14,7 +14,7 @@ public sealed class ResultRepositoryTests(PostgresFixture postgres)
     {
         await using var dataSource = await postgres.CreateDatabaseAsync(Ct);
         var poll = await PollSeeder.SeedOpenPollAsync(dataSource, Ct);
-        var result = ResultCalculator.Calculate(
+        var result = new ResultCalculator().Calculate(
             poll,
             new Dictionary<Guid, long> { [poll.Participants[0].Id] = 400, [poll.Participants[1].Id] = 400, [poll.Participants[2].Id] = 200 },
             poll.ClosesAt!.Value.AddSeconds(1));
@@ -43,11 +43,11 @@ public sealed class ResultRepositoryTests(PostgresFixture postgres)
         await using var dataSource = await postgres.CreateDatabaseAsync(Ct);
         var poll = await PollSeeder.SeedOpenPollAsync(dataSource, Ct);
         var sut = new ResultRepository(dataSource);
-        var first = ResultCalculator.Calculate(
+        var first = new ResultCalculator().Calculate(
             poll,
             new Dictionary<Guid, long> { [poll.Participants[0].Id] = 1 },
             poll.ClosesAt!.Value.AddSeconds(1));
-        var second = ResultCalculator.Calculate(
+        var second = new ResultCalculator().Calculate(
             poll,
             new Dictionary<Guid, long> { [poll.Participants[1].Id] = 9 },
             poll.ClosesAt.Value.AddSeconds(2));

@@ -5,7 +5,7 @@ using Domain.Entities;
 
 namespace Application.UseCases.CreatePoll;
 
-public sealed class CreatePollUseCase(IPollRepository polls, TimeProvider time)
+public sealed class CreatePollUseCase(IPollRepository polls, TimeProvider time) : ICreatePollUseCase
 {
     public async Task<Result<PollDto>> ExecuteAsync(IReadOnlyList<string>? participantNames, CancellationToken cancellationToken = default)
     {

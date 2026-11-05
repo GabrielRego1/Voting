@@ -5,7 +5,7 @@ using Domain.Common;
 
 namespace Application.UseCases.OpenPollVoting;
 
-public sealed class OpenPollVotingUseCase(IPollRepository polls, TimeProvider time)
+public sealed class OpenPollVotingUseCase(IPollRepository polls, TimeProvider time) : IOpenPollVotingUseCase
 {
     public async Task<Result<PollDto>> ExecuteAsync(Guid pollId, CancellationToken cancellationToken = default)
     {

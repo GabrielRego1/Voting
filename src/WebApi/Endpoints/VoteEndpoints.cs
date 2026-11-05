@@ -15,7 +15,7 @@ public static class VoteEndpoints
             Guid pollId,
             [FromHeader(Name = IdempotencyKeyHeader)] string? idempotencyKey,
             CastVoteRequest? request,
-            CastVoteUseCase castVote,
+            ICastVoteUseCase castVote,
             CancellationToken ct) =>
         {
             var result = await castVote.ExecuteAsync(pollId, request?.ParticipantId ?? Guid.Empty, idempotencyKey, ct);

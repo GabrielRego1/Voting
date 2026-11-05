@@ -11,7 +11,8 @@ public sealed class FinalizePollResultUseCase(
     IVoteWriter writer,
     IVoteTally tally,
     IResultRepository results,
-    TimeProvider time)
+    IResultCalculator calculator,
+    TimeProvider time) : IFinalizePollResultUseCase
 {
     /// <summary>
     /// Returns <see langword="true"/> when this call stored the result.
@@ -31,7 +32,7 @@ public sealed class FinalizePollResultUseCase(
 
         await writer.FlushUntilAsync(closesAt, cancellationToken);
         var counts = await tally.CountByParticipantAsync(pollId, cancellationToken);
-        var result = ResultCalculator.Calculate(poll, counts, time.GetUtcNow());
+        var result = calculator.Calculate(poll, counts, time.GetUtcNow());
         return await results.TryAddAsync(result, cancellationToken);
     }
 }

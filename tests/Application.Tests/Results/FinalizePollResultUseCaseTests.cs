@@ -4,6 +4,7 @@ using Application.UseCases.CreatePoll;
 using Application.UseCases.FinalizePollResult;
 using Application.UseCases.OpenPollVoting;
 using Domain.Enums;
+using Domain.Services;
 using Microsoft.Extensions.Time.Testing;
 
 namespace Application.Tests.Results;
@@ -99,7 +100,7 @@ public sealed class FinalizePollResultUseCaseTests
 
     private FinalizePollResultUseCase Sut()
     {
-        return new FinalizePollResultUseCase(_polls, _writer, _tally, _results, _time);
+        return new FinalizePollResultUseCase(_polls, _writer, _tally, _results, new ResultCalculator(), _time);
     }
 
     private async Task<PollDto> CreateOpenPollAsync()

@@ -10,9 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
-using MsOptions = Microsoft.Extensions.Options.Options;
 using Microsoft.Extensions.Time.Testing;
 using Npgsql;
+using MsOptions = Microsoft.Extensions.Options.Options;
 
 namespace Infrastructure.Tests.Votes;
 

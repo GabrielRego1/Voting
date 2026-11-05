@@ -5,7 +5,7 @@ using Domain.Common;
 
 namespace Application.UseCases.GetPollDetails;
 
-public sealed class GetPollDetailsUseCase(IPollRepository polls, TimeProvider time)
+public sealed class GetPollDetailsUseCase(IPollRepository polls, TimeProvider time) : IGetPollDetailsUseCase
 {
     public async Task<Result<PollDto>> ExecuteAsync(Guid pollId, CancellationToken cancellationToken = default)
     {

@@ -4,7 +4,7 @@ using Domain.Common;
 
 namespace Application.UseCases.GetPollResult;
 
-public sealed class GetPollResultUseCase(IPollRepository polls, IResultRepository results)
+public sealed class GetPollResultUseCase(IPollRepository polls, IResultRepository results) : IGetPollResultUseCase
 {
     public async Task<Result<PollResultDto>> ExecuteAsync(Guid pollId, CancellationToken cancellationToken = default)
     {

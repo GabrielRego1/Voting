@@ -10,11 +10,11 @@ namespace Domain.Services;
 /// always sum to exactly 100.00 when there are votes. The outcome is decided by exact counts, never by
 /// rounded percentages (research R-06).
 /// </summary>
-public static class ResultCalculator
+public sealed class ResultCalculator : IResultCalculator
 {
     private const long HundredPercentInHundredths = 10_000;
 
-    public static PollResult Calculate(Poll poll, IReadOnlyDictionary<Guid, long> votesByParticipant, DateTimeOffset finalizedAt)
+    public PollResult Calculate(Poll poll, IReadOnlyDictionary<Guid, long> votesByParticipant, DateTimeOffset finalizedAt)
     {
         ArgumentNullException.ThrowIfNull(poll);
         ArgumentNullException.ThrowIfNull(votesByParticipant);

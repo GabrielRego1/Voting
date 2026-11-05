@@ -8,7 +8,7 @@ namespace Application.UseCases.CastVote;
 /// <summary>
 /// Validates and records a vote. Multiple votes per voter are allowed and no per-origin limit exists (FR-006, FR-018).
 /// </summary>
-public sealed class CastVoteUseCase(IPollRepository polls, IVoteWriter writer, TimeProvider time)
+public sealed class CastVoteUseCase(IPollRepository polls, IVoteWriter writer, TimeProvider time) : ICastVoteUseCase
 {
     public const int MaxIdempotencyKeyLength = 64;
 

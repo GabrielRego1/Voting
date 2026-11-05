@@ -11,7 +11,7 @@ namespace Infrastructure.BackgroundServices;
 /// </summary>
 public sealed partial class PollFinalizer(
     IPollRepository polls,
-    FinalizePollResultUseCase finalizePollResult,
+    IFinalizePollResultUseCase finalizePollResult,
     TimeProvider time,
     ILogger<PollFinalizer> logger) : BackgroundService
 {
