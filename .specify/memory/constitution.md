@@ -59,6 +59,13 @@ na contagem correta, e não na unicidade do eleitor.
   justificando.
 - Todo código, comentário, log, mensagem de commit e teste fica em inglês; a
   documentação (specs, plans, README) fica em português.
+- **Encadeamento fluente**: quando um método (inclusive método de extensão) retorna o
+  próprio receptor ou um builder, as chamadas DEVEM ser encadeadas numa única expressão,
+  sem repetir a variável a cada instrução (ex.: `services.AddA().AddB().AddC()`, e não
+  `services.AddA(); services.AddB();`). Prefira a sobrecarga que mantém a cadeia (ex.:
+  `Configure<TOptions>(section)` em vez de `AddOptions<TOptions>().Bind(section)`).
+  Métodos e lambdas cujo corpo é só essa cadeia usam expression body (`=>`). Atribuições
+  sucessivas de propriedades de um objeto recém-criado usam object initializer.
 
 **Racional**: regras automatizadas evitam discussões subjetivas de estilo em revisão.
 
@@ -190,4 +197,4 @@ nos testes, e deixa explícito, num único lugar por camada, como a aplicação 
 - Violações justificadas são registradas em "Complexity Tracking" no plan da feature.
 - Toda revisão de PR DEVE verificar a conformidade com esta constitution.
 
-**Version**: 1.1.0 | **Ratified**: 2026-11-02 | **Last Amended**: 2026-11-04
+**Version**: 1.2.0 | **Ratified**: 2026-11-02 | **Last Amended**: 2026-11-04
