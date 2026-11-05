@@ -1,4 +1,4 @@
-namespace Workload;
+namespace Workload.Load;
 
 /// <summary>
 /// Draws a participant index (0-based, in position order) following the percentage distribution.

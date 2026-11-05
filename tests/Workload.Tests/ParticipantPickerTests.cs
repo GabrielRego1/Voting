@@ -1,3 +1,5 @@
+using Workload.Load;
+
 namespace Workload.Tests;
 
 public sealed class ParticipantPickerTests

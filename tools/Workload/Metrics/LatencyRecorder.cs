@@ -1,6 +1,4 @@
-namespace Workload;
-
-internal sealed record LatencySummary(double P50, double P95, double P99, double Max);
+namespace Workload.Metrics;
 
 /// <summary>
 /// Thread-safe latency samples in milliseconds, summarized with nearest-rank percentiles.

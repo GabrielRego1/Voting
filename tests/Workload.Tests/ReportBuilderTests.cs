@@ -1,4 +1,8 @@
 using System.Text.Json;
+using Workload.ApiClient;
+using Workload.Configuration;
+using Workload.Metrics;
+using Workload.Reporting;
 
 namespace Workload.Tests;
 

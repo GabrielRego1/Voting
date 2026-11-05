@@ -1,6 +1,10 @@
 using System.Diagnostics;
+using Workload.ApiClient;
+using Workload.Configuration;
+using Workload.Metrics;
+using Workload.Reporting;
 
-namespace Workload;
+namespace Workload.Load;
 
 /// <summary>
 /// Open-model load: every 10 ms tick sends the votes due for the elapsed time (<c>rate/100</c> per tick),

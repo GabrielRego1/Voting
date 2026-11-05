@@ -1,3 +1,6 @@
+using Workload.Metrics;
+using Workload.Reporting;
+
 namespace Workload.Tests;
 
 public sealed class ProgressReporterTests

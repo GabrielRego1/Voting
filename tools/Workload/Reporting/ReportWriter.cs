@@ -1,7 +1,8 @@
 using System.Globalization;
 using System.Text.Json;
+using Workload.Configuration;
 
-namespace Workload;
+namespace Workload.Reporting;
 
 internal static class ReportWriter
 {

@@ -1,3 +1,5 @@
+using Workload.Configuration;
+
 namespace Workload.Tests;
 
 public sealed class WorkloadOptionsTests

@@ -1,7 +1,8 @@
 using System.Diagnostics;
 using System.Globalization;
+using Workload.Reporting;
 
-namespace Workload;
+namespace Workload.Metrics;
 
 /// <summary>
 /// Periodically writes the load progress to <c>error</c> (stderr), keeping stdout reserved for the report.

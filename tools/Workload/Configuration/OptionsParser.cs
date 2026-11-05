@@ -1,8 +1,6 @@
 using System.Globalization;
 
-namespace Workload;
-
-internal sealed record OptionsParseResult(WorkloadOptions? Options, string? Error);
+namespace Workload.Configuration;
 
 /// <summary>
 /// Hand-written parser for the CLI options of contracts/workload-cli.md (no extra dependency).

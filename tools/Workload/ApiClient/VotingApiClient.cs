@@ -3,10 +3,9 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using Workload.Metrics;
 
-namespace Workload;
-
-internal sealed record PollInfo(Guid Id, IReadOnlyList<Guid> ParticipantIds, DateTimeOffset? ClosesAt);
+namespace Workload.ApiClient;
 
 /// <summary>
 /// HTTP client of the public voting API (contracts/voting-api.openapi.yaml), the same channel real voters use.

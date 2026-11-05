@@ -1,3 +1,5 @@
+using Workload.Metrics;
+
 namespace Workload.Tests;
 
 public sealed class LatencyRecorderTests

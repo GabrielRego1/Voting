@@ -1,22 +1,9 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
+using Workload.ApiClient;
+using Workload.Metrics;
 
-namespace Workload;
-
-/// <summary>
-/// Final HTTP outcome of a vote after automatic retries; <see cref="StatusCode"/> is null on transport errors.
-/// </summary>
-internal sealed record VoteResponse(int? StatusCode, string? ProblemCode)
-{
-    public static VoteResponse TransportError { get; } = new(null, null);
-
-    public bool IsConfirmation => StatusCode is 200 or 201;
-}
-
-/// <summary>
-/// Counters shown while the load runs.
-/// </summary>
-internal sealed record ProgressSnapshot(long Sent, long Accepted, long Rejected, long TransportErrors, long InFlight);
+namespace Workload.Reporting;
 
 /// <summary>
 /// Thread-safe counters of a run. <c>accepted</c> counts distinct confirmed keys; intentional resends count in

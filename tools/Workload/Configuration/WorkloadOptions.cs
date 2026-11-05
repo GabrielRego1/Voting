@@ -1,10 +1,4 @@
-namespace Workload;
-
-internal enum OutputFormat
-{
-    Text,
-    Json,
-}
+namespace Workload.Configuration;
 
 /// <summary>
 /// Options of the load generator, as defined in contracts/workload-cli.md.

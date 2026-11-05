@@ -112,7 +112,12 @@ src/
     └── Errors/                  # mapeamento de rejeições → Problem Details
 
 tools/
-└── Workload/                    # CLI do gerador de carga
+└── Workload/                    # CLI do gerador de carga (Program, WorkloadApp)
+    ├── Configuration/           # WorkloadOptions, OutputFormat, OptionsParser
+    ├── ApiClient/               # VotingApiClient, PollInfo, VoteResponse
+    ├── Load/                    # LoadRunner, ParticipantPicker
+    ├── Metrics/                 # LatencyRecorder, ProgressReporter
+    └── Reporting/               # Report, ReportBuilder, ReportWriter
 
 tests/
 ├── Domain.Tests/                # unit
