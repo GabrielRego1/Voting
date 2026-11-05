@@ -10,7 +10,7 @@ namespace Workload.ApiClient;
 /// <summary>
 /// HTTP client of the public voting API (contracts/voting-api.openapi.yaml), the same channel real voters use.
 /// </summary>
-internal sealed class VotingApiClient(HttpClient http) : IDisposable
+internal sealed class VotingApiClient(HttpClient http) : IVotingApiClient
 {
     /// <summary>Total attempts per vote, including the first one.</summary>
     public const int MaxAttempts = 3;
@@ -22,24 +22,6 @@ internal sealed class VotingApiClient(HttpClient http) : IDisposable
     public static readonly TimeSpan RetryBaseDelay = TimeSpan.FromSeconds(1);
 
     public HttpClient Http => http;
-
-    /// <summary>
-    /// Creates the client. An injected <c>handler</c> (tests) is used as is; otherwise a pooled
-    /// <see cref="SocketsHttpHandler"/> limited to <c>connections</c> is created.
-    /// </summary>
-    public static VotingApiClient Create(Uri baseUrl, int connections, HttpMessageHandler? handler = null)
-    {
-        var client = handler is null
-            ? new HttpClient(new SocketsHttpHandler
-            {
-                MaxConnectionsPerServer = connections,
-                PooledConnectionLifetime = Timeout.InfiniteTimeSpan,
-            })
-            : new HttpClient(handler, disposeHandler: false);
-        client.BaseAddress = baseUrl;
-        client.Timeout = TimeSpan.FromSeconds(30);
-        return new VotingApiClient(client);
-    }
 
     public async Task<PollInfo> CreatePollAsync(IReadOnlyList<string> participants, CancellationToken cancellationToken)
     {

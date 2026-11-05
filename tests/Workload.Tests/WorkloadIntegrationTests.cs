@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
 using WebApi.Tests.Fixtures;
 
 namespace Workload.Tests;
@@ -24,12 +25,12 @@ public sealed class WorkloadIntegrationTests : IAsyncLifetime
         using var output = new StringWriter();
         using var error = new StringWriter();
         var handler = _api.Server.CreateHandler();
+        await using var services = new ServiceCollection().AddWorkload(handler).BuildServiceProvider();
 
-        var exitCode = await WorkloadApp.RunAsync(
+        var exitCode = await services.GetRequiredService<IWorkloadApp>().RunAsync(
             ["--base-url", "http://localhost", "--rate", "100", "--duration", "3", "--retry-fraction", "0.1", "--connections", "16", "--output", "json"],
             output,
             error,
-            handler,
             afterLoad: async (client, pollId) =>
             {
                 var poll = await client.GetFromJsonAsync<JsonElement>($"/polls/{pollId}");

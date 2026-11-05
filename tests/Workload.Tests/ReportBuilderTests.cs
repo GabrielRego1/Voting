@@ -145,7 +145,7 @@ public sealed class ReportBuilderTests
         var report = builder.Build(Guid.NewGuid(), Parameters, TimeSpan.FromSeconds(1), Latency(10), ResultWithTotal(1));
         using var writer = new StringWriter();
 
-        ReportWriter.Write(report, OutputFormat.Json, writer);
+        new ReportWriter().Write(report, OutputFormat.Json, writer);
 
         using var json = JsonDocument.Parse(writer.ToString());
         var root = json.RootElement;
@@ -180,7 +180,7 @@ public sealed class ReportBuilderTests
         var report = builder.Build(Guid.NewGuid(), Parameters, TimeSpan.FromSeconds(1), Latency(10), ResultWithTotal(1));
         using var writer = new StringWriter();
 
-        ReportWriter.Write(report, OutputFormat.Text, writer);
+        new ReportWriter().Write(report, OutputFormat.Text, writer);
 
         var text = writer.ToString();
         foreach (var field in new[] { "pollId", "sent", "accepted", "replayed", "retried", "transportErrors", "achievedRate", "p95", "acceptedEqualsTotalVotes", "noDuplicatesFromReplays", "p95WithinTarget" })

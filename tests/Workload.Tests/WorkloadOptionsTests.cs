@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Workload.Configuration;
 
 namespace Workload.Tests;
@@ -7,7 +8,7 @@ public sealed class WorkloadOptionsTests
     [Fact]
     public void Parse_NoArguments_AppliesContractDefaults()
     {
-        var result = OptionsParser.Parse([]);
+        var result = new OptionsParser().Parse([]);
 
         Assert.Null(result.Error);
         var options = result.Options!;
@@ -28,7 +29,7 @@ public sealed class WorkloadOptionsTests
     {
         var pollId = Guid.NewGuid();
 
-        var result = OptionsParser.Parse([
+        var result = new OptionsParser().Parse([
             "--base-url", "http://api:9000", "--poll-id", pollId.ToString(), "--participants", "X,Y,Z",
             "--rate", "100", "--duration", "3", "--distribution", "60,40,0", "--retry-fraction", "0.1",
             "--connections", "8", "--result-timeout", "20", "--output", "json",
@@ -67,7 +68,7 @@ public sealed class WorkloadOptionsTests
     [InlineData("--unknown", "1")]
     public void Parse_InvalidValue_ReturnsError(string option, string value)
     {
-        var result = OptionsParser.Parse([option, value]);
+        var result = new OptionsParser().Parse([option, value]);
 
         Assert.Null(result.Options);
         Assert.False(string.IsNullOrWhiteSpace(result.Error));
@@ -76,7 +77,7 @@ public sealed class WorkloadOptionsTests
     [Fact]
     public void Parse_OptionWithoutValue_ReturnsError()
     {
-        var result = OptionsParser.Parse(["--rate"]);
+        var result = new OptionsParser().Parse(["--rate"]);
 
         Assert.NotNull(result.Error);
     }
@@ -87,7 +88,10 @@ public sealed class WorkloadOptionsTests
         using var output = new StringWriter();
         using var error = new StringWriter();
 
-        var exitCode = await WorkloadApp.RunAsync(["--rate", "0"], output, error, cancellationToken: TestContext.Current.CancellationToken);
+        await using var services = new ServiceCollection().AddWorkload().BuildServiceProvider();
+
+        var exitCode = await services.GetRequiredService<IWorkloadApp>()
+            .RunAsync(["--rate", "0"], output, error, cancellationToken: TestContext.Current.CancellationToken);
 
         Assert.Equal(2, exitCode);
         Assert.Contains("--rate", error.ToString(), StringComparison.Ordinal);
@@ -99,7 +103,9 @@ public sealed class WorkloadOptionsTests
         using var output = new StringWriter();
         using var error = new StringWriter();
 
-        var exitCode = await WorkloadApp.RunAsync(
+        await using var services = new ServiceCollection().AddWorkload().BuildServiceProvider();
+
+        var exitCode = await services.GetRequiredService<IWorkloadApp>().RunAsync(
             ["--base-url", "http://127.0.0.1:1", "--duration", "1", "--rate", "1"],
             output,
             error,

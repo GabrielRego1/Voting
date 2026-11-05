@@ -13,33 +13,33 @@ namespace Workload;
 /// Runs the load generator: prepares the poll, sends the load, waits for the result and reports.
 /// Exit codes follow contracts/workload-cli.md (0 = all checks passed, 1 = a check failed, 2 = usage or API error).
 /// </summary>
-internal static class WorkloadApp
+internal sealed class WorkloadApp(
+    IOptionsParser parser,
+    IVotingApiClientFactory clients,
+    ILoadRunner loadRunner,
+    IProgressReporter progressReporter,
+    IReportWriter reportWriter) : IWorkloadApp
 {
     public const int UsageOrApiError = 2;
 
-    /// <summary>
-    /// Runs one execution. <c>handler</c> lets integration tests reach an in-memory API, and <c>afterLoad</c>
-    /// runs after the load and before waiting for the result.
-    /// </summary>
-    public static async Task<int> RunAsync(
+    public async Task<int> RunAsync(
         string[] args,
         TextWriter output,
         TextWriter error,
-        HttpMessageHandler? handler = null,
         Func<HttpClient, Guid, Task>? afterLoad = null,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(output);
         ArgumentNullException.ThrowIfNull(error);
-        var parsed = OptionsParser.Parse(args);
+        var parsed = parser.Parse(args);
         if (parsed.Options is not { } options)
         {
             await error.WriteLineAsync(parsed.Error);
-            await error.WriteLineAsync(OptionsParser.Usage);
+            await error.WriteLineAsync(parser.Usage);
             return UsageOrApiError;
         }
 
-        using var client = VotingApiClient.Create(options.BaseUrl, options.Connections, handler);
+        using var client = clients.Create(options.BaseUrl, options.Connections);
         PollInfo poll;
         try
         {
@@ -62,12 +62,14 @@ internal static class WorkloadApp
         TimeSpan sendingTime;
         using (var progressCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken))
         {
-            var progress = new ProgressReporter(error, report, ProgressReporter.DefaultInterval)
-                .RunAsync(TimeSpan.FromSeconds(options.DurationSeconds), progressCancellation.Token);
+            var progress = progressReporter.RunAsync(
+                error,
+                report,
+                TimeSpan.FromSeconds(options.DurationSeconds),
+                progressCancellation.Token);
             try
             {
-                sendingTime = await new LoadRunner(client, options, report, latency, new Random())
-                    .RunAsync(poll, cancellationToken);
+                sendingTime = await loadRunner.RunAsync(client, poll, options, report, latency, cancellationToken);
             }
             finally
             {
@@ -89,12 +91,12 @@ internal static class WorkloadApp
         var result = await WaitForResultAsync(client, poll.Id, TimeSpan.FromSeconds(options.ResultTimeoutSeconds), error, cancellationToken);
         var parameters = new RunParameters(options.Rate, options.DurationSeconds, options.Distribution, options.RetryFraction, options.Connections);
         var final = report.Build(poll.Id, parameters, sendingTime, latency.Summarize(), result);
-        ReportWriter.Write(final, options.Output, output);
+        reportWriter.Write(final, options.Output, output);
         return final.ExitCode;
     }
 
     private static async Task<JsonElement?> WaitForResultAsync(
-        VotingApiClient client,
+        IVotingApiClient client,
         Guid pollId,
         TimeSpan timeout,
         TextWriter error,

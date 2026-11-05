@@ -10,22 +10,27 @@ namespace Workload.Load;
 /// Open-model load: every 10 ms tick sends the votes due for the elapsed time (<c>rate/100</c> per tick),
 /// independently of responses, so slow responses never slow the arrival rate down.
 /// </summary>
-internal sealed class LoadRunner(
-    VotingApiClient client,
-    WorkloadOptions options,
-    ReportBuilder report,
-    LatencyRecorder latency,
-    Random random)
+internal sealed class LoadRunner : ILoadRunner
 {
     public static readonly TimeSpan Tick = TimeSpan.FromMilliseconds(10);
 
     /// <summary>
     /// Sends the load and waits for every request to finish. Returns the time spent sending.
     /// </summary>
-    public async Task<TimeSpan> RunAsync(PollInfo poll, CancellationToken cancellationToken)
+    public async Task<TimeSpan> RunAsync(
+        IVotingApiClient client,
+        PollInfo poll,
+        WorkloadOptions options,
+        ReportBuilder report,
+        LatencyRecorder latency,
+        CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(client);
         ArgumentNullException.ThrowIfNull(poll);
-        var picker = new ParticipantPicker(options.Distribution, random);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(report);
+        ArgumentNullException.ThrowIfNull(latency);
+        var picker = new ParticipantPicker(options.Distribution, new Random());
         var duration = TimeSpan.FromSeconds(options.DurationSeconds);
         var total = (long)options.Rate * options.DurationSeconds;
         var inFlight = new List<Task>((int)Math.Min(total, int.MaxValue));
@@ -39,7 +44,7 @@ internal sealed class LoadRunner(
             var due = Math.Min(total, (long)(options.Rate * elapsed.TotalSeconds));
             for (; scheduled < due; scheduled++)
             {
-                inFlight.Add(SendVoteAsync(poll, poll.ParticipantIds[picker.Pick()], cancellationToken));
+                inFlight.Add(SendVoteAsync(client, poll, poll.ParticipantIds[picker.Pick()], options, report, latency, cancellationToken));
             }
         }
 
@@ -48,7 +53,14 @@ internal sealed class LoadRunner(
         return sendingTime;
     }
 
-    private async Task SendVoteAsync(PollInfo poll, Guid participantId, CancellationToken cancellationToken)
+    private static async Task SendVoteAsync(
+        IVotingApiClient client,
+        PollInfo poll,
+        Guid participantId,
+        WorkloadOptions options,
+        ReportBuilder report,
+        LatencyRecorder latency,
+        CancellationToken cancellationToken)
     {
         var key = Guid.NewGuid().ToString("N");
         report.RecordSent();

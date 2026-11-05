@@ -5,7 +5,7 @@ namespace Workload.Configuration;
 /// <summary>
 /// Hand-written parser for the CLI options of contracts/workload-cli.md (no extra dependency).
 /// </summary>
-internal static class OptionsParser
+internal sealed class OptionsParser : IOptionsParser
 {
     public const string Usage = """
         Usage: dotnet run --project tools/Workload -- [options]
@@ -21,7 +21,9 @@ internal static class OptionsParser
           --output <text|json>      report format (default text)
         """;
 
-    public static OptionsParseResult Parse(IReadOnlyList<string> args)
+    string IOptionsParser.Usage => Usage;
+
+    public OptionsParseResult Parse(IReadOnlyList<string> args)
     {
         ArgumentNullException.ThrowIfNull(args);
         var options = new WorkloadOptions();

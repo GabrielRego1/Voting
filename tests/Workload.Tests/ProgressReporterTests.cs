@@ -13,8 +13,8 @@ public sealed class ProgressReporterTests
         using var error = new StringWriter();
         using var cancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);
 
-        var run = new ProgressReporter(error, builder, TimeSpan.FromMilliseconds(20))
-            .RunAsync(TimeSpan.FromSeconds(3), cancellation.Token);
+        var run = new ProgressReporter(TimeSpan.FromMilliseconds(20))
+            .RunAsync(error, builder, TimeSpan.FromSeconds(3), cancellation.Token);
         await Task.Delay(TimeSpan.FromMilliseconds(150), TestContext.Current.CancellationToken);
         await cancellation.CancelAsync();
         await run;

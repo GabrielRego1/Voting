@@ -4,11 +4,11 @@ using Workload.Configuration;
 
 namespace Workload.Reporting;
 
-internal static class ReportWriter
+internal sealed class ReportWriter : IReportWriter
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) { WriteIndented = true };
 
-    public static void Write(Report report, OutputFormat format, TextWriter writer)
+    public void Write(Report report, OutputFormat format, TextWriter writer)
     {
         ArgumentNullException.ThrowIfNull(report);
         ArgumentNullException.ThrowIfNull(writer);

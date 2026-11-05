@@ -7,15 +7,17 @@ namespace Workload.Metrics;
 /// <summary>
 /// Periodically writes the load progress to <c>error</c> (stderr), keeping stdout reserved for the report.
 /// </summary>
-internal sealed class ProgressReporter(TextWriter error, ReportBuilder report, TimeSpan interval)
+internal sealed class ProgressReporter(TimeSpan interval) : IProgressReporter
 {
     public static readonly TimeSpan DefaultInterval = TimeSpan.FromSeconds(5);
 
     /// <summary>
     /// Writes one line per interval until cancelled. Cancellation ends the loop without throwing.
     /// </summary>
-    public async Task RunAsync(TimeSpan duration, CancellationToken cancellationToken)
+    public async Task RunAsync(TextWriter error, ReportBuilder report, TimeSpan duration, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(error);
+        ArgumentNullException.ThrowIfNull(report);
         var stopwatch = Stopwatch.StartNew();
         using var timer = new PeriodicTimer(interval);
         try
