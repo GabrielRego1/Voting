@@ -11,8 +11,8 @@ Requisitos principais (ver [spec](specs/001-paredao-voting/spec.md)):
 
 ```mermaid
 flowchart LR
-    G["Voting.Workload<br/>gerador de carga"] -->|HTTP| API
-    subgraph API["Voting.Api (.NET 10 / Kestrel)"]
+    G["Workload<br/>gerador de carga"] -->|HTTP| API
+    subgraph API["WebApi (.NET 10 / Kestrel)"]
         V["CastVote<br/>valida + cache da poll"] --> Q[["Channel limitado<br/>(503 se cheio)"]]
         Q --> W["VoteBatchWriter<br/>group commit (≤ 1000 votos / 5 ms)"]
         F["PollFinalizer<br/>flush + apuração"]

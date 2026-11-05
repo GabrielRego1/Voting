@@ -80,34 +80,54 @@ Directory.Packages.props         # Central Package Management
 docker-compose.yml               # postgres:17
 
 src/
-├── Voting.Domain/
-│   ├── Polls/                   # Poll, Participant, PollStatus, VoteEvaluation, VoteRejection
-│   └── Results/                 # ResultCalculator, PollResult, ParticipantTally, Outcome
-├── Voting.Application/
-│   ├── Abstractions/            # IPollRepository, IVoteWriter, IResultRepository, IVoteTally
-│   ├── Polls/                   # CreatePoll, OpenPoll, GetPoll
-│   ├── Votes/                   # CastVote (validação + idempotência)
-│   └── Results/                 # FinalizePoll, GetResult
-├── Voting.Infrastructure/
-│   ├── Persistence/             # NpgsqlDataSource, SchemaInitializer, Sql/*.sql, repositórios
-│   ├── Votes/                   # VoteBatchWriter (Channel + group commit)
-│   └── Hosting/                 # PollFinalizer (BackgroundService), DI
-└── Voting.Api/
+├── Domain/
+│   ├── Entities/                # Poll, Vote, PollResult
+│   ├── ValueObjects/            # Participant, ParticipantTally, VoteEvaluation
+│   ├── Enums/                   # PollStatus, Outcome
+│   ├── Errors/                  # PollErrors, VoteRejection
+│   ├── Services/                # ResultCalculator
+│   └── Common/                  # Result, Result<T>, DomainError, Instants
+├── Application/
+│   ├── Abstractions/
+│   │   └── Persistence/         # IPollRepository, IVoteWriter, IResultRepository, IVoteTally, VoteWriteOutcome
+│   ├── UseCases/                # uma pasta por caso de uso
+│   │   ├── CreatePoll/          # CreatePollUseCase
+│   │   ├── OpenPollVoting/      # OpenPollVotingUseCase
+│   │   ├── GetPollDetails/      # GetPollDetailsUseCase
+│   │   ├── CastVote/            # CastVoteUseCase (validação + idempotência), CastVoteResult
+│   │   ├── FinalizePollResult/  # FinalizePollResultUseCase
+│   │   └── GetPollResult/       # GetPollResultUseCase, PollResultDto, ParticipantTallyDto
+│   ├── Dtos/                    # DTOs compartilhados: PollDto, ParticipantDto, VoteReceipt
+│   └── Errors/                  # ApplicationErrors, VoteErrors
+├── Infrastructure/
+│   ├── Persistence/
+│   │   ├── Repositories/        # PollRepository, CachedPollRepository, ResultRepository, VoteTally
+│   │   ├── Writers/             # VoteBatchWriter (Channel + group commit)
+│   │   └── Migrations/          # SchemaInitializer, NNN_*.sql
+│   ├── BackgroundServices/      # PollFinalizer
+│   └── Configuration/           # VoteWriterOptions
+└── WebApi/
     ├── Endpoints/               # Polls, Votes, Results
+    ├── Contracts/Requests/      # CreatePollRequest, CastVoteRequest
     └── Errors/                  # mapeamento de rejeições → Problem Details
 
 tools/
-└── Voting.Workload/             # CLI do gerador de carga
+└── Workload/                    # CLI do gerador de carga
 
 tests/
-├── Voting.Domain.Tests/         # unit
-├── Voting.Application.Tests/    # unit (repositórios fake em memória, FakeTimeProvider)
-├── Voting.Infrastructure.Tests/ # integração (Testcontainers)
-├── Voting.Api.Tests/            # integração (WebApplicationFactory + Testcontainers)
-└── Voting.Workload.Tests/       # unit (agendamento, percentis, relatório) + integração em taxa baixa
+├── Domain.Tests/                # unit
+├── Application.Tests/           # unit (repositórios fake em memória, FakeTimeProvider)
+├── Infrastructure.Tests/        # integração (Testcontainers)
+├── WebApi.Tests/                # integração (WebApplicationFactory + Testcontainers)
+└── Workload.Tests/              # unit (agendamento, percentis, relatório) + integração em taxa baixa
 ```
 
 **Structure Decision**: as quatro camadas exigidas pelo Princípio I ficam em `src/`. O gerador de carga fica em `tools/`, porque é um cliente externo da API (não é camada do sistema) e só referencia contratos HTTP, nunca projetos de `src/`. Cada projeto de produção tem um projeto de testes correspondente.
+
+Dentro de cada camada, o código é organizado por **papel** (entidades, value objects, casos de uso, repositórios...), com estas regras:
+- cada caso de uso tem a própria pasta em `Application/UseCases/`, com nome descritivo do comportamento e sufixo `UseCase`;
+- um tipo por arquivo;
+- o namespace segue a pasta, garantido no build pelo IDE0130 (`.editorconfig`).
 
 ## Etapas do plan
 
