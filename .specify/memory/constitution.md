@@ -16,7 +16,9 @@ concorrência, sem compromisso com produção.
   código do Domain NÃO usa tipos de HTTP/ASP.NET.
 - Regras de negócio (abertura/encerramento de votação, validação de participante,
   apuração) DEVEM viver em Domain/Application, nunca em controllers ou repositórios.
-- Infraestrutura é acessada via interfaces declaradas em Application.
+- Infraestrutura e camadas externas são acessadas via interfaces declaradas em
+  `Application/Abstractions/` (Princípio VI); a implementação fica na camada externa e a
+  dependência continua apontando para dentro.
 
 **Racional**: isolar o domínio permite testá-lo sem I/O e trocar a infraestrutura
 (banco, fila, cache) como exercício de aprendizado.
@@ -84,18 +86,20 @@ na contagem correta, e não na unicidade do eleitor.
 - Projetos são nomeados pela camada, sem prefixo de produto: `Domain`, `Application`,
   `Infrastructure`, `WebApi`. Ferramentas ficam em `tools/` (ex.: `Workload`).
 - Dentro de cada projeto, o código é organizado por **papel**, nunca por entidade:
-  - `Domain/`: `Entities/`, `ValueObjects/`, `Enums/`, `Errors/`, `Services/`, `Common/`;
-  - `Application/`: `UseCases/`, `Dtos/`, `Abstractions/<Área>/` (ex.: `Persistence/`),
-    `Errors/`, `Extensions/`;
+  - `Domain/`: `Abstractions/<Área>/`, `Entities/`, `ValueObjects/`, `Enums/`, `Errors/`,
+    `Services/`, `Common/`;
+  - `Application/`: `Abstractions/<Área>/` (ex.: `Persistence/`, `UseCases/`), `UseCases/`,
+    `Dtos/`, `Errors/`, `Extensions/`;
   - `Infrastructure/`: `Persistence/{Repositories,Writers,Migrations}/`,
     `BackgroundServices/`, `Options/`;
   - `WebApi/`: `Endpoints/`, `Contracts/Requests/`, `Errors/`.
   Uma pasta nova de papel exige justificativa no plan.
 - **Casos de uso**: cada um tem a própria pasta em `Application/UseCases/<Comportamento>/`,
   com nome que descreve o comportamento (verbo + objeto, ex.: `OpenPollVoting`,
-  `GetPollResult`), e não só a entidade. A pasta contém `I<Comportamento>UseCase`, a
-  implementação `<Comportamento>UseCase` (método `ExecuteAsync`) e os tipos usados só por
-  esse caso de uso. Tipos compartilhados vão para `Application/Dtos/`.
+  `GetPollResult`), e não só a entidade. A pasta contém a implementação
+  `<Comportamento>UseCase` (método `ExecuteAsync`) e os tipos usados só por esse caso de
+  uso; a interface `I<Comportamento>UseCase` fica em `Application/Abstractions/UseCases/`.
+  Tipos compartilhados vão para `Application/Dtos/`.
 - **Options**: classes ligadas a configuração (`appsettings`) ficam em `Options/`, com
   sufixo `Options`, uma constante `public const string ConfigurationPath` com o caminho da
   seção e propriedades `{ get; init; }`. Uma propriedade sem valor padrão seguro é `required`;
@@ -133,9 +137,18 @@ evita classes soltas. A verificação no build impede que a estrutura se degrade
 
 - Todo **serviço** (classe com comportamento consumida por outra classe: casos de uso,
   repositórios, writers, clientes HTTP, serviços de domínio, orquestradores) DEVE ter uma
-  interface `I<Nome>` e ser consumido **pela interface**. A interface fica ao lado da
-  implementação, exceto as portas de infraestrutura, que ficam em
-  `Application/Abstractions/<Área>/` (Princípio I).
+  interface `I<Nome>` e ser consumido **pela interface**.
+- **Interfaces NUNCA ficam no mesmo diretório da implementação.** Elas ficam numa
+  subpasta por área de `Abstractions/`:
+  - serviços da Application e de camadas externas (Infrastructure, WebApi): a interface
+    fica em `Application/Abstractions/<Área>/` (ex.: `UseCases/`, `Persistence/`) e a
+    implementação na camada que a fornece. Assim, Application não conhece a
+    Infrastructure e a IoC via DI respeita o sentido das dependências (Princípio I);
+  - serviços do Domain: a interface fica em `Domain/Abstractions/<Área>/`, porque o
+    Domain não pode depender da Application;
+  - ferramentas sem referência à Application (ex.: `tools/Workload`): a interface fica em
+    `<Projeto>/Abstractions/<Área>/` do próprio projeto. Contratos de tipos da raiz do
+    projeto ficam na raiz de `Abstractions/`.
 - Serviços DEVEM ser registrados no container de DI pela interface
   (`AddSingleton<IFoo, Foo>()` ou equivalente) e recebidos por injeção no construtor.
   Consumidores NÃO instanciam serviços com `new`. Classes estáticas com comportamento
@@ -219,4 +232,4 @@ nos testes, e deixa explícito, num único lugar por camada, como a aplicação 
 - Violações justificadas são registradas em "Complexity Tracking" no plan da feature.
 - Toda revisão de PR DEVE verificar a conformidade com esta constitution.
 
-**Version**: 2.0.0 | **Ratified**: 2026-11-02 | **Last Amended**: 2026-11-05
+**Version**: 3.0.0 | **Ratified**: 2026-11-02 | **Last Amended**: 2026-11-05
