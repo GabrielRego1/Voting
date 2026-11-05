@@ -1,5 +1,6 @@
 using Application;
 using Application.Abstractions.Persistence;
+using Domain;
 using Domain.Entities;
 using Domain.Enums;
 using Infrastructure;
@@ -86,6 +87,7 @@ public sealed class PollFinalizerTests(PostgresFixture postgres)
         var provider = new ServiceCollection()
             .AddLogging()
             .AddSingleton(time)
+            .AddDomain()
             .AddApplication()
             .AddInfrastructure(configuration)
             .BuildServiceProvider();

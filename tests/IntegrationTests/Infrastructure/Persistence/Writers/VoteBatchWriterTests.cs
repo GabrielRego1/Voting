@@ -1,6 +1,7 @@
 using Application;
 using Application.Abstractions.Persistence;
 using Application.Dtos;
+using Domain;
 using Domain.Entities;
 using Infrastructure;
 using Infrastructure.Options;
@@ -151,6 +152,7 @@ public sealed class VoteBatchWriterTests(PostgresFixture postgres)
         await using var provider = new ServiceCollection()
             .AddLogging()
             .AddSingleton<TimeProvider>(new FakeTimeProvider(PollSeeder.OpenedAt))
+            .AddDomain()
             .AddApplication()
             .AddInfrastructure(configuration)
             .BuildServiceProvider();

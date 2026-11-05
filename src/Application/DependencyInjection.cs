@@ -4,7 +4,6 @@ using Application.UseCases.FinalizePollResult;
 using Application.UseCases.GetPollDetails;
 using Application.UseCases.GetPollResult;
 using Application.UseCases.OpenPollVoting;
-using Domain.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -17,6 +16,5 @@ public static class DependencyInjection
         .AddSingleton<IGetPollDetailsUseCase, GetPollDetailsUseCase>()
         .AddSingleton<ICastVoteUseCase, CastVoteUseCase>()
         .AddSingleton<IFinalizePollResultUseCase, FinalizePollResultUseCase>()
-        .AddSingleton<IGetPollResultUseCase, GetPollResultUseCase>()
-        .AddSingleton<IResultCalculator, ResultCalculator>();
+        .AddSingleton<IGetPollResultUseCase, GetPollResultUseCase>();
 }

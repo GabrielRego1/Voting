@@ -1,4 +1,5 @@
 using Application;
+using Domain;
 using Infrastructure;
 using WebApi;
 using WebApi.Endpoints;
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddWebApi()
+    .AddDomain()
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
 
