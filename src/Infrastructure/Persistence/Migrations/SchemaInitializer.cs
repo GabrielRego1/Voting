@@ -1,6 +1,6 @@
 using System.Reflection;
 using Infrastructure.BackgroundServices;
-using Infrastructure.Configuration;
+using Infrastructure.Options;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Persistence.Writers;
 using Microsoft.Extensions.Hosting;

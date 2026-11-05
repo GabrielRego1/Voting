@@ -1,4 +1,4 @@
-namespace Infrastructure.Configuration;
+namespace Infrastructure.Options;
 
 /// <summary>
 /// Tuning of the group-commit vote writer, bound to the <c>VoteWriter</c> configuration section.

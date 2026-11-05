@@ -1,6 +1,6 @@
 using Application.Abstractions.Persistence;
 using Infrastructure.BackgroundServices;
-using Infrastructure.Configuration;
+using Infrastructure.Options;
 using Infrastructure.Persistence.Migrations;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Persistence.Writers;

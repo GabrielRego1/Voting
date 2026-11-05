@@ -3,7 +3,7 @@ using System.Threading.Channels;
 using Application.Abstractions.Persistence;
 using Application.Dtos;
 using Domain.Entities;
-using Infrastructure.Configuration;
+using Infrastructure.Options;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

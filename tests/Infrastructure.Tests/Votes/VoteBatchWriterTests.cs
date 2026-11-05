@@ -2,7 +2,7 @@ using Application;
 using Application.Abstractions.Persistence;
 using Application.Dtos;
 using Domain.Entities;
-using Infrastructure.Configuration;
+using Infrastructure.Options;
 using Infrastructure.Persistence.Migrations;
 using Infrastructure.Persistence.Writers;
 using Infrastructure.Tests.Fixtures;
@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Options;
+using MsOptions = Microsoft.Extensions.Options.Options;
 using Microsoft.Extensions.Time.Testing;
 using Npgsql;
 
@@ -202,7 +202,7 @@ public sealed class VoteBatchWriterTests(PostgresFixture postgres)
 
     internal static VoteBatchWriter CreateWriter(NpgsqlDataSource dataSource, VoteWriterOptions? options = null)
     {
-        return new VoteBatchWriter(dataSource, Options.Create(options ?? new VoteWriterOptions()), NullLogger<VoteBatchWriter>.Instance);
+        return new VoteBatchWriter(dataSource, MsOptions.Create(options ?? new VoteWriterOptions()), NullLogger<VoteBatchWriter>.Instance);
     }
 
     private static async Task<RunningWriter> StartWriterAsync(NpgsqlDataSource dataSource, VoteWriterOptions? options = null)

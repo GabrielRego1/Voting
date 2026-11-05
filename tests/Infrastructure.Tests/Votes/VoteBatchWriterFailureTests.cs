@@ -1,4 +1,4 @@
-using Infrastructure.Configuration;
+using Infrastructure.Options;
 using Infrastructure.Persistence.Migrations;
 using Infrastructure.Tests.Fixtures;
 using Npgsql;
