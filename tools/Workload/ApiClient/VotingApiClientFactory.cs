@@ -6,17 +6,16 @@ namespace Workload.ApiClient;
 /// </summary>
 internal sealed class VotingApiClientFactory(HttpMessageHandler? handler = null) : IVotingApiClientFactory
 {
-    public IVotingApiClient Create(Uri baseUrl, int connections)
-    {
-        var client = handler is null
-            ? new HttpClient(new SocketsHttpHandler
+    public IVotingApiClient Create(Uri baseUrl, int connections) => new VotingApiClient(
+        new HttpClient(
+            handler ?? new SocketsHttpHandler
             {
                 MaxConnectionsPerServer = connections,
                 PooledConnectionLifetime = Timeout.InfiniteTimeSpan,
-            })
-            : new HttpClient(handler, disposeHandler: false);
-        client.BaseAddress = baseUrl;
-        client.Timeout = TimeSpan.FromSeconds(30);
-        return new VotingApiClient(client);
-    }
+            },
+            disposeHandler: handler is null)
+        {
+            BaseAddress = baseUrl,
+            Timeout = TimeSpan.FromSeconds(30),
+        });
 }

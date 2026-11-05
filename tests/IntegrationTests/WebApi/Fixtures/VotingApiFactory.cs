@@ -61,17 +61,15 @@ public class VotingApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
-        builder.UseSetting("ConnectionStrings:Voting", ConnectionString);
+        builder
+            .UseSetting("ConnectionStrings:Voting", ConnectionString)
+            .ConfigureTestServices(services => services
+                .RemoveAll<TimeProvider>()
+                .AddSingleton<TimeProvider>(Time));
         foreach (var (key, value) in _settings)
         {
             builder.UseSetting(key, value);
         }
-
-        builder.ConfigureTestServices(services =>
-        {
-            services.RemoveAll<TimeProvider>();
-            services.AddSingleton<TimeProvider>(Time);
-        });
     }
 
     private static async Task<PostgreSqlContainer> StartContainerAsync()

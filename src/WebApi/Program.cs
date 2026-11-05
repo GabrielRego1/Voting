@@ -12,12 +12,12 @@ builder.Services
 
 var app = builder.Build();
 
-app.UseExceptionHandler();
-app.UseStatusCodePages();
+app.UseExceptionHandler()
+    .UseStatusCodePages();
 
-app.MapPollEndpoints();
-app.MapVoteEndpoints();
-app.MapResultEndpoints();
+app.MapPollEndpoints()
+    .MapVoteEndpoints()
+    .MapResultEndpoints();
 
 app.Run();
 

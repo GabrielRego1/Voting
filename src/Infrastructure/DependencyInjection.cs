@@ -14,32 +14,23 @@ public static class DependencyInjection
 {
     public const string ConnectionStringName = "Voting";
 
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddSingleton(_ =>
-        {
-            var connectionString = configuration.GetConnectionString(ConnectionStringName)
-                ?? throw new InvalidOperationException($"Connection string '{ConnectionStringName}' is not configured.");
-            return NpgsqlDataSource.Create(connectionString);
-        });
-
-        services.AddSingleton<SchemaInitializer>();
-        services.AddHostedService(sp => sp.GetRequiredService<SchemaInitializer>());
-        services.AddSingleton<PollRepository>();
-        services.AddSingleton<IPollRepository>(sp => new CachedPollRepository(
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) => services
+        .AddSingleton(_ => NpgsqlDataSource.Create(
+            configuration.GetConnectionString(ConnectionStringName)
+                ?? throw new InvalidOperationException($"Connection string '{ConnectionStringName}' is not configured.")))
+        .AddSingleton<SchemaInitializer>()
+        .AddHostedService(sp => sp.GetRequiredService<SchemaInitializer>())
+        .AddSingleton<PollRepository>()
+        .AddSingleton<IPollRepository>(sp => new CachedPollRepository(
             sp.GetRequiredService<PollRepository>(),
-            sp.GetRequiredService<TimeProvider>()));
-
-        services.AddOptions<VoteWriterOptions>().Bind(configuration.GetSection(VoteWriterOptions.SectionName));
-        services.AddSingleton<VoteBatchWriter>();
-        services.AddSingleton<IVoteWriter>(sp => sp.GetRequiredService<VoteBatchWriter>());
-        services.AddHostedService(sp => sp.GetRequiredService<VoteBatchWriter>());
-
-        services.AddSingleton<IVoteTally, VoteTally>();
-        services.AddSingleton<IResultRepository, ResultRepository>();
+            sp.GetRequiredService<TimeProvider>()))
+        .Configure<VoteWriterOptions>(configuration.GetSection(VoteWriterOptions.SectionName))
+        .AddSingleton<VoteBatchWriter>()
+        .AddSingleton<IVoteWriter>(sp => sp.GetRequiredService<VoteBatchWriter>())
+        .AddHostedService(sp => sp.GetRequiredService<VoteBatchWriter>())
+        .AddSingleton<IVoteTally, VoteTally>()
+        .AddSingleton<IResultRepository, ResultRepository>()
 
         // Registered after the writer: hosted services start in order, and finalization flushes the writer.
-        services.AddHostedService<PollFinalizer>();
-        return services;
-    }
+        .AddHostedService<PollFinalizer>();
 }

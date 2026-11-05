@@ -11,15 +11,12 @@ namespace Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
-    {
-        services.AddSingleton<ICreatePollUseCase, CreatePollUseCase>();
-        services.AddSingleton<IOpenPollVotingUseCase, OpenPollVotingUseCase>();
-        services.AddSingleton<IGetPollDetailsUseCase, GetPollDetailsUseCase>();
-        services.AddSingleton<ICastVoteUseCase, CastVoteUseCase>();
-        services.AddSingleton<IFinalizePollResultUseCase, FinalizePollResultUseCase>();
-        services.AddSingleton<IGetPollResultUseCase, GetPollResultUseCase>();
-        services.AddSingleton<IResultCalculator, ResultCalculator>();
-        return services;
-    }
+    public static IServiceCollection AddApplication(this IServiceCollection services) => services
+        .AddSingleton<ICreatePollUseCase, CreatePollUseCase>()
+        .AddSingleton<IOpenPollVotingUseCase, OpenPollVotingUseCase>()
+        .AddSingleton<IGetPollDetailsUseCase, GetPollDetailsUseCase>()
+        .AddSingleton<ICastVoteUseCase, CastVoteUseCase>()
+        .AddSingleton<IFinalizePollResultUseCase, FinalizePollResultUseCase>()
+        .AddSingleton<IGetPollResultUseCase, GetPollResultUseCase>()
+        .AddSingleton<IResultCalculator, ResultCalculator>();
 }

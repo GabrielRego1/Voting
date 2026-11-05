@@ -148,12 +148,12 @@ public sealed class VoteBatchWriterTests(PostgresFixture postgres)
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?> { ["ConnectionStrings:Voting"] = connectionString })
             .Build();
-        var services = new ServiceCollection()
+        await using var provider = new ServiceCollection()
             .AddLogging()
             .AddSingleton<TimeProvider>(new FakeTimeProvider(PollSeeder.OpenedAt))
             .AddApplication()
-            .AddInfrastructure(configuration);
-        await using var provider = services.BuildServiceProvider();
+            .AddInfrastructure(configuration)
+            .BuildServiceProvider();
         var hostedServices = provider.GetServices<IHostedService>().ToArray();
         foreach (var hosted in hostedServices)
         {

@@ -13,14 +13,11 @@ internal static class DependencyInjection
     /// Registers the load generator services. An injected <paramref name="handler"/> lets integration tests reach
     /// an in-memory API instead of the network.
     /// </summary>
-    public static IServiceCollection AddWorkload(this IServiceCollection services, HttpMessageHandler? handler = null)
-    {
-        services.AddSingleton<IOptionsParser, OptionsParser>();
-        services.AddSingleton<IVotingApiClientFactory>(_ => new VotingApiClientFactory(handler));
-        services.AddSingleton<ILoadRunner, LoadRunner>();
-        services.AddSingleton<IProgressReporter>(_ => new ProgressReporter(ProgressReporter.DefaultInterval));
-        services.AddSingleton<IReportWriter, ReportWriter>();
-        services.AddSingleton<IWorkloadApp, WorkloadApp>();
-        return services;
-    }
+    public static IServiceCollection AddWorkload(this IServiceCollection services, HttpMessageHandler? handler = null) => services
+        .AddSingleton<IOptionsParser, OptionsParser>()
+        .AddSingleton<IVotingApiClientFactory>(_ => new VotingApiClientFactory(handler))
+        .AddSingleton<ILoadRunner, LoadRunner>()
+        .AddSingleton<IProgressReporter>(_ => new ProgressReporter(ProgressReporter.DefaultInterval))
+        .AddSingleton<IReportWriter, ReportWriter>()
+        .AddSingleton<IWorkloadApp, WorkloadApp>();
 }
