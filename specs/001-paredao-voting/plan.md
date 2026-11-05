@@ -82,18 +82,20 @@ docker-compose.yml               # postgres:17
 src/
 ├── Domain/                      # FrameworkReference Microsoft.AspNetCore.App (herdada pelas demais camadas)
 │   ├── DependencyInjection.cs   # AddDomain
+│   ├── Abstractions/Services/   # IResultCalculator
 │   ├── Entities/                # Poll, Vote, PollResult
 │   ├── ValueObjects/            # Participant, ParticipantTally, VoteEvaluation
 │   ├── Enums/                   # PollStatus, Outcome
 │   ├── Errors/                  # PollErrors, VoteRejection
-│   ├── Services/                # IResultCalculator, ResultCalculator
+│   ├── Services/                # ResultCalculator
 │   └── Common/                  # Result, Result<T>, DomainError, Instants
 ├── Application/
 │   ├── DependencyInjection.cs   # AddApplication (registra os casos de uso)
 │   ├── Extensions/              # ConfigureOptions<T> (binding + validação de options)
 │   ├── Abstractions/
-│   │   └── Persistence/         # IPollRepository, IVoteWriter, IResultRepository, IVoteTally, VoteWriteOutcome
-│   ├── UseCases/                # uma pasta por caso de uso: I<X>UseCase + <X>UseCase
+│   │   ├── Persistence/         # IPollRepository, IVoteWriter, IResultRepository, IVoteTally, VoteWriteOutcome
+│   │   └── UseCases/            # I<X>UseCase de cada caso de uso
+│   ├── UseCases/                # uma pasta por caso de uso: <X>UseCase + tipos exclusivos
 │   │   ├── CreatePoll/          # CreatePollUseCase
 │   │   ├── OpenPollVoting/      # OpenPollVotingUseCase
 │   │   ├── GetPollDetails/      # GetPollDetailsUseCase
@@ -117,7 +119,8 @@ src/
     └── Errors/                  # mapeamento de rejeições → Problem Details
 
 tools/
-└── Workload/                    # CLI do gerador de carga (Program, IWorkloadApp, DependencyInjection: AddWorkload)
+└── Workload/                    # CLI do gerador de carga (Program, WorkloadApp, DependencyInjection: AddWorkload)
+    ├── Abstractions/            # IWorkloadApp e, por área, as interfaces dos serviços
     ├── Configuration/           # WorkloadOptions, OutputFormat, OptionsParser
     ├── ApiClient/               # VotingApiClient, PollInfo, VoteResponse
     ├── Load/                    # LoadRunner, ParticipantPicker
@@ -141,7 +144,7 @@ Dentro de cada camada, o código é organizado por **papel** (entidades, value o
 - cada caso de uso tem a própria pasta em `Application/UseCases/`, com nome descritivo do comportamento e sufixo `UseCase`;
 - um tipo por arquivo;
 - o namespace segue a pasta, garantido no build pelo IDE0130 (`.editorconfig`);
-- todo serviço tem interface, é registrado no DI pela interface e cada camada expõe `Add{Camada}` na sua classe `DependencyInjection`.
+- todo serviço tem interface, que fica em `Abstractions/<Área>/` (nunca ao lado da implementação; serviços de camadas externas têm a interface na Application), é registrado no DI pela interface, e cada camada expõe `Add{Camada}` na sua classe `DependencyInjection`.
 
 Essas regras são os Princípios V (Organização do Código) e VI (Inversão de Controle) da constitution.
 
